@@ -1,0 +1,384 @@
+/* Animation CSS for SlimFile welcome animation */
+
+.welcome-animation {
+    position: relative;
+    width: 100%;
+    height: 200px;
+    margin: 2rem auto;
+    overflow: hidden;
+}
+
+/* File Character */
+.file-character {
+    position: absolute;
+    left: -100px;
+    bottom: 50px;
+    width: 80px;
+    height: 100px;
+    background: linear-gradient(135deg, var(--gradient-start), var(--gradient-mid));
+    border-radius: 8px;
+    animation: fileEnter 2s forwards, fileJump 1s 2s infinite alternate;
+    transform-origin: bottom center;
+    box-shadow: var(--shadow);
+}
+
+.file-character::before {
+    content: '';
+    position: absolute;
+    top: -15px;
+    right: 0;
+    width: 30px;
+    height: 30px;
+    background: linear-gradient(135deg, var(--gradient-mid), var(--gradient-end));
+    border-radius: 0 0 0 8px;
+    clip-path: polygon(0 0, 100% 100%, 100% 0);
+}
+
+.file-character::after {
+    content: '';
+    position: absolute;
+    bottom: 20px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background-color: rgba(255, 255, 255, 0.7);
+    box-shadow: 0 8px 0 rgba(255, 255, 255, 0.7), 0 16px 0 rgba(255, 255, 255, 0.7), 
+                0 24px 0 rgba(255, 255, 255, 0.7), 0 32px 0 rgba(255, 255, 255, 0.7);
+}
+
+/* File Face */
+.file-face {
+    position: absolute;
+    top: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 25px;
+}
+
+.file-eye {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    background-color: white;
+    border-radius: 50%;
+    animation: blink 3s infinite;
+}
+
+.file-eye.left {
+    left: 5px;
+}
+
+.file-eye.right {
+    right: 5px;
+}
+
+.file-smile {
+    position: absolute;
+    bottom: 0;
+    left: 5px;
+    right: 5px;
+    height: 8px;
+    border-bottom: 3px solid white;
+    border-radius: 0 0 10px 10px;
+    animation: smile 2s 2s forwards;
+}
+
+/* Compression Machine */
+.compress-machine {
+    position: absolute;
+    right: -150px;
+    bottom: 30px;
+    width: 120px;
+    height: 90px;
+    background: linear-gradient(to bottom, #555, #333);
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    animation: machineEnter 2s 1s forwards;
+    box-shadow: var(--shadow);
+}
+
+.machine-light {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    width: 15px;
+    height: 15px;
+    background-color: red;
+    border-radius: 50%;
+    animation: blink 1s infinite alternate;
+}
+
+.machine-screen {
+    width: 80px;
+    height: 40px;
+    background-color: #222;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.loading-bar {
+    width: 60px;
+    height: 10px;
+    background-color: #111;
+    border-radius: 5px;
+    overflow: hidden;
+    position: relative;
+}
+
+.loading-progress {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 0;
+    background: linear-gradient(90deg, var(--gradient-start), var(--gradient-end));
+    animation: loading 2s 4s forwards;
+}
+
+.machine-slot {
+    width: 60px;
+    height: 10px;
+    background-color: #111;
+    border-radius: 3px;
+}
+
+/* Small File (Compressed) */
+.small-file {
+    position: absolute;
+    right: -50px;
+    bottom: 50px;
+    width: 40px;
+    height: 50px;
+    background: linear-gradient(135deg, var(--gradient-start), var(--gradient-mid));
+    border-radius: 5px;
+    opacity: 0;
+    transform: scale(0.5);
+    animation: smallFileAppear 1s 6s forwards, smallFileJump 0.5s 7s infinite alternate;
+    box-shadow: var(--shadow);
+}
+
+.small-file::before {
+    content: '';
+    position: absolute;
+    top: -8px;
+    right: 0;
+    width: 15px;
+    height: 15px;
+    background: linear-gradient(135deg, var(--gradient-mid), var(--gradient-end));
+    border-radius: 0 0 0 5px;
+    clip-path: polygon(0 0, 100% 100%, 100% 0);
+}
+
+.small-file::after {
+    content: '';
+    position: absolute;
+    bottom: 10px;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background-color: rgba(255, 255, 255, 0.7);
+    box-shadow: 0 4px 0 rgba(255, 255, 255, 0.7), 0 8px 0 rgba(255, 255, 255, 0.7),
+                0 12px 0 rgba(255, 255, 255, 0.7), 0 16px 0 rgba(255, 255, 255, 0.7);
+}
+
+.small-face {
+    position: absolute;
+    top: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 20px;
+    height: 12px;
+}
+
+.small-eye {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    background-color: white;
+    border-radius: 50%;
+    animation: blink 3s 6s infinite;
+}
+
+.small-eye.left {
+    left: 2px;
+}
+
+.small-eye.right {
+    right: 2px;
+}
+
+.small-smile {
+    position: absolute;
+    bottom: 0;
+    left: 2px;
+    right: 2px;
+    height: 4px;
+    border-bottom: 2px solid white;
+    border-radius: 0 0 5px 5px;
+}
+
+/* Animation text */
+.animation-text {
+    position: absolute;
+    top: 10px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--text-color);
+    opacity: 0;
+    animation: textFadeIn 1s 8s forwards;
+}
+
+/* Ground */
+.ground {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 30px;
+    background: linear-gradient(to bottom, var(--primary-light), transparent);
+    border-top-left-radius: 100%;
+    border-top-right-radius: 100%;
+}
+
+/* Keyframes */
+@keyframes fileEnter {
+    0% { left: -100px; }
+    70% { left: 200px; }
+    100% { left: 150px; }
+}
+
+@keyframes fileJump {
+    0% { transform: scaleY(1); bottom: 50px; }
+    50% { transform: scaleY(0.9); }
+    100% { transform: scaleY(1); bottom: 60px; }
+}
+
+@keyframes blink {
+    0%, 48%, 52%, 100% { transform: scaleY(1); }
+    50% { transform: scaleY(0.1); }
+}
+
+@keyframes smile {
+    0% { border-radius: 0 0 10px 10px; }
+    100% { border-radius: 0 0 15px 15px; height: 10px; }
+}
+
+@keyframes machineEnter {
+    0% { right: -150px; }
+    100% { right: 150px; }
+}
+
+@keyframes loading {
+    0% { width: 0; }
+    70% { width: 70%; }
+    100% { width: 100%; }
+}
+
+@keyframes smallFileAppear {
+    0% { opacity: 0; transform: scale(0.5); right: 160px; }
+    100% { opacity: 1; transform: scale(1); right: 300px; }
+}
+
+@keyframes smallFileJump {
+    0% { bottom: 50px; }
+    100% { bottom: 60px; }
+}
+
+@keyframes textFadeIn {
+    0% { opacity: 0; transform: translateY(-10px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .welcome-animation {
+        height: 180px;
+    }
+    
+    @keyframes fileEnter {
+        0% { left: -100px; }
+        70% { left: 100px; }
+        100% { left: 70px; }
+    }
+    
+    @keyframes machineEnter {
+        0% { right: -150px; }
+        100% { right: 70px; }
+    }
+    
+    @keyframes smallFileAppear {
+        0% { opacity: 0; transform: scale(0.5); right: 80px; }
+        100% { opacity: 1; transform: scale(1); right: 180px; }
+    }
+    
+    .file-character {
+        width: 60px;
+        height: 75px;
+    }
+    
+    .compress-machine {
+        width: 90px;
+        height: 70px;
+    }
+    
+    .machine-screen {
+        width: 60px;
+        height: 30px;
+    }
+    
+    .loading-bar {
+        width: 45px;
+    }
+    
+    .machine-slot {
+        width: 45px;
+    }
+    
+    .small-file {
+        width: 30px;
+        height: 37px;
+    }
+}
+
+@media (max-width: 480px) {
+    .welcome-animation {
+        height: 150px;
+    }
+    
+    @keyframes fileEnter {
+        0% { left: -100px; }
+        70% { left: 60px; }
+        100% { left: 40px; }
+    }
+    
+    @keyframes machineEnter {
+        0% { right: -150px; }
+        100% { right: 40px; }
+    }
+    
+    @keyframes smallFileAppear {
+        0% { opacity: 0; transform: scale(0.5); right: 50px; }
+        100% { opacity: 1; transform: scale(1); right: 130px; }
+    }
+    
+    .file-character {
+        width: 50px;
+        height: 62px;
+    }
+    
+    .compress-machine {
+        width: 75px;
+        height: 60px;
+    }
+}
