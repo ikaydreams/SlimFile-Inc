@@ -4,11 +4,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SlimFile - Fast & Free File Compression</title>
+    <title>SlimFile - Fast & Easy File Compression Tool</title>
+    <meta name="title" content="SlimFile - Fast & Easy File Compression Tool">
+<meta name="description" content="SlimFile is a powerful file compression tool that reduces the size of PDFs and images while preserving quality. No installation required.">
+    <meta name="robots" content="index, follow">
+<meta name="language" content="en">
+<meta name="author" content="Isaac Abakah, Founder and CEO of SlimFile Inc.">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="manifest" href="/manifest.json">
+
+    <button id="installBtn" style="display: none;">Install SlimFile</button>
+    
     <!-- PDF.js and PDF-Lib for PDF compression -->
     <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.4.120/build/pdf.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "SlimFile",
+  "url": "https://slim-file.vercel.app/",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": "https://slim-file.vercel.app/search?q={search_term_string}",
+    "query-input": "required name=search_term_string"
+  }
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "name": "SlimFile - File Compression Tool",
+  "url": "https://slim-file.vercel.app/"
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "name": "About SlimFile",
+  "url": "https://slim-file.vercel.app/about.html"
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "name": "SlimFile Team",
+  "url": "https://slim-file.vercel.app/team.html"
+}
+</script>
+
     <script>
         /* Initialize PDF.js worker */
         window.pdfjsLib = window.pdfjsLib || {};
@@ -17,6 +67,7 @@
     </script>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="animation.css">
+    <link rel="canonical" href="https://www.slim-file.vercel.app/"/>
     <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-QWYM1ML0X8"></script>
 <script>
@@ -266,7 +317,7 @@
             <p>Secure browser-based file compression</p>
         </footer>
     </div>
-
+    <script src="/pwa.js"></script>
     <script src="compression.js"></script>
     <script src="app.js"></script>
 </body>
