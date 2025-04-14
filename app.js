@@ -7,7 +7,7 @@
 document.getElementById('currentYear').textContent = new Date().getFullYear();
 
 
-<script>
+
   window.addEventListener('appinstalled', () => {
     console.log('SlimFile installed!');
     gtag('event', 'pwa_install', {
@@ -16,7 +16,7 @@ document.getElementById('currentYear').textContent = new Date().getFullYear();
       value: 1
     });
   });
-</script>
+
 
 
 // Detect iOS
