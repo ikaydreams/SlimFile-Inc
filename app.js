@@ -6,6 +6,19 @@
 // Set current year in footer
 document.getElementById('currentYear').textContent = new Date().getFullYear();
 
+
+<script>
+  window.addEventListener('appinstalled', () => {
+    console.log('SlimFile installed!');
+    gtag('event', 'pwa_install', {
+      event_category: 'PWA',
+      event_label: 'SlimFile Web App',
+      value: 1
+    });
+  });
+</script>
+
+
 // Detect iOS
 const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
 
