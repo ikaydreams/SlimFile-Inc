@@ -20,6 +20,44 @@
     --header-height: 70px;
 }
 
+
+/* Install button container */
+#installBtn {
+  background-color: #AA60C8;
+  color: #fff;
+  border: none;
+  border-radius: 25px;
+  padding: 15px 30px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  display: inline-block;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+/* Hover effect for the button */
+#installBtn:hover {
+  background-color: #D69ADE;
+  transform: scale(1.05); /* Slightly enlarge the button */
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2); /* Enhance the shadow */
+}
+
+/* Focus effect for accessibility */
+#installBtn:focus {
+  outline: none; /* Remove the default focus outline */
+  box-shadow: 0 0 0 2px #fff, 0 0 0 4px #00b894; /* Add custom focus ring */
+}
+
+/* Install button for smaller screens */
+@media (max-width: 600px) {
+  #installBtn {
+    padding: 12px 25px;
+    font-size: 14px;
+  }
+}
+
+
 /* Dark mode support */
 @media (prefers-color-scheme: dark) {
     :root {
