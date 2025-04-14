@@ -6,6 +6,18 @@
 // Set current year in footer
 document.getElementById('currentYear').textContent = new Date().getFullYear();
 
+// Detect iOS
+const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+
+if (isIOS) {
+  document.getElementById('installBanner').style.display = 'block';
+}
+
+// Close the install banner
+document.getElementById('closeInstallBanner').addEventListener('click', () => {
+  document.getElementById('installBanner').style.display = 'none';
+});
+
 // DOM elements
 const elements = {
     dropZone: document.getElementById('dropZone'),
