@@ -77,6 +77,18 @@
 
   gtag('config', 'G-QWYM1ML0X8');
 </script>
+
+    <script>
+  window.addEventListener('appinstalled', () => {
+    console.log('SlimFile installed!');
+    gtag('event', 'pwa_install', {
+      event_category: 'PWA',
+      event_label: 'SlimFile Web App',
+      value: 1
+    });
+  });
+</script>
+    
 </head>
 <body>
     <!-- Mobile menu overlay -->
