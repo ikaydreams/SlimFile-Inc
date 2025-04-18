@@ -17,15 +17,19 @@ window.addEventListener("appinstalled", () => {
 
 // Detect iOS
 const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+const installBanner = document.getElementById('installBanner');
+const closeInstallBtn = document.getElementById('closeInstallBanner');
 
-if (isIOS) {
-  document.getElementById("installBanner").style.display = "block";
+if (isIOS && installBanner) {
+  installBanner.style.display = 'block';
 }
 
 // Close the install banner
-document.getElementById("closeInstallBanner").addEventListener("click", () => {
-  document.getElementById("installBanner").style.display = "none";
-});
+if (closeInstallBtn && installBanner) {
+  closeInstallBtn.addEventListener('click', () => {
+    installBanner.style.display = 'none';
+  });
+}
 
 // DOM elements
 const elements = {
