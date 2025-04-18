@@ -29,9 +29,6 @@ if (isIOS && installBanner) {
 }
 
 // Close the install banner
-const closeInstallBtn = document.getElementById('closeInstallBanner');
-const installBanner = document.getElementById('installBanner');
-
 if (closeInstallBtn && installBanner) {
   closeInstallBtn.addEventListener('click', () => {
     installBanner.style.display = 'none';
