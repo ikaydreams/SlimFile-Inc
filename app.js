@@ -22,8 +22,8 @@ document.getElementById('currentYear').textContent = new Date().getFullYear();
 // Detect iOS
 const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
 
-if (isIOS) {
-  document.getElementById('installBanner').style.display = 'block';
+if (isIOS && installBanner) {
+  installBanner.style.display = 'block';
 }
 
 // Close the install banner
