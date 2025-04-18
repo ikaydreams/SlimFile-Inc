@@ -20,7 +20,14 @@ document.getElementById('currentYear').textContent = new Date().getFullYear();
 
 
 // Detect iOS
-if (isIOS && installBanner) {
+const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+const isInStandaloneMode = ('standalone' in window.navigator) && window.navigator.standalone;
+
+const installBanner = document.getElementById('installBanner');
+const closeInstallBtn = document.getElementById('closeInstallBanner');
+
+// Show install banner only if on iOS and not already installed
+if (isIOS && !isInStandaloneMode && installBanner) {
   installBanner.style.display = 'block';
 }
 
