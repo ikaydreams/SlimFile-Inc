@@ -27,9 +27,14 @@ if (isIOS) {
 }
 
 // Close the install banner
-document.getElementById('closeInstallBanner').addEventListener('click', () => {
-  document.getElementById('installBanner').style.display = 'none';
-});
+const closeInstallBtn = document.getElementById('closeInstallBanner');
+const installBanner = document.getElementById('installBanner');
+
+if (closeInstallBtn && installBanner) {
+  closeInstallBtn.addEventListener('click', () => {
+    installBanner.style.display = 'none';
+  });
+}
 
 // DOM elements
 const elements = {
