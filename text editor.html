@@ -1,0 +1,145 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>SlimFile Text Editor</title>
+  <!-- TinyMCE open source from jsDelivr -->
+  <script src="https://cdn.jsdelivr.net/npm/tinymce@6/tinymce.min.js"></script>
+  <!-- jsPDF library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="animation.css">
+<style>
+  #saveBtn{
+background-color: #f35f96;
+color: white;
+font-size: 16px;
+padding: 12px 24px;
+border: none;
+border-radius: 10px;
+cursor: pointer;
+margin: 15px auto;
+display: block;
+box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+transition: background-color 0.3s ease;
+
+  }
+
+  #saveBtn:hover{
+    background-color: #c05fb1;
+  }
+
+  #tagline{
+    margin-top: -10px;
+  }
+
+</style>
+
+
+</head>
+<body>
+
+        <!-- Mobile menu overlay -->
+    <div id="overlay" class="overlay"></div>
+    
+    <!-- Mobile navigation -->
+    <div id="mobileNav" class="mobile-nav">
+        <button id="mobileNavClose" class="mobile-nav-close">✕</button>
+        <a href="index.html" class="mobile-nav-link">Home</a>
+        <a href="about.html" class="mobile-nav-link">About Us</a>
+        <a href="team.html" class="mobile-nav-link">Our Team</a>
+        <a href="text editor.html" class="mobile-nav-link active">Text editor</a>
+    </div>
+
+    <div class="container">
+      <header class="header">
+          <h1 class="logo">SlimFile Text Editor</h1>
+          <p class="tagline">Simplicity for all</p>
+          
+          <!-- Desktop navigation -->
+          <nav class="navigation">
+              <a href="index.html" class="nav-link">Home</a>
+              <a href="about.html" class="nav-link">About Us</a>
+              <a href="team.html" class="nav-link">Our Team</a>
+              <a href="text editor.html" class="mobile-nav-link active">Text editor</a>
+          </nav>
+          
+          <!-- Hamburger menu button -->
+          <div id="hamburgerMenu" class="hamburger-menu">
+              <span></span>
+              <span></span>
+              <span></span>
+          </div>
+  
+  <textarea id="editor">
+    Start typing like you’re in MS Word…
+  </textarea>
+
+  
+  <button id="saveBtn" onclick="saveAsPDF()">Compress and Download</button>
+
+
+  
+  <footer class="footer">
+    <p>© <span id="currentYear"></span> SlimFile Inc. All rights reserved.</p>
+    <p>Secure browser-based file compression</p>
+</footer>
+
+
+  <script>
+    tinymce.init({
+      selector: '#editor',
+      Plugins: 'image autosave',
+      Plugins: 'image',
+      height: 500,
+      branding: false,
+      menubar: 'file edit view insert format tools table help',
+      toolbar_mode: 'sliding',
+      toolbar: [
+        'undo redo | image| styleselect | fontselect fontsizeselect |',
+        'bold italic underline strikethrough forecolor backcolor |',
+        'alignleft aligncenter alignright |',
+        'bullist numlist | removeformat'
+      
+      ],
+      autosave_ask_before_unload: true,
+      autosave_internal: '20s',
+      autosave_retention: '30m',
+      autosave_restore_when_empty: true,
+
+      font_formats: [
+        'Arial=arial,helvetica,sans-serif;',
+        'Times New Roman=times new roman,times;',
+        'Courier New=courier new,courier,monospace;',
+        'Georgia=georgia,palatino;',
+        'Verdana=verdana,geneva;',
+        'Tahoma=tahoma,arial;',
+        'Garamond=garamond;',
+        'Comic Sans MS=comic sans ms,sans-serif;',
+        'Impact=impact,chicago;'
+      ].join(''),
+      fontsize_formats: '1px 2px 3px 4px 5px 6px 7px 8px 9px 10px 11px 12px 14px 16px 18px 20px 22px 24px 26px 28px 30px 32px 34px 36px',
+      mobile: {
+        toolbar_mode: 'sliding',
+        menubar: true
+      },
+      content_style: `
+        body { font-family: Arial, sans-serif; padding: 10px; }
+      `
+    });
+
+    async function saveAsPDF() {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      const content = tinymce.get('editor').getContent({ format: 'text' });
+      const lines = doc.splitTextToSize(content, 180);
+      doc.text(lines, 10, 10);
+      doc.save('document.pdf');
+    }
+  </script>
+  <script src="app.js"></script>
+</body>
+</html>
