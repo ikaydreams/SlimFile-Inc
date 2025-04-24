@@ -156,6 +156,11 @@ a:hover {
     color: var(--text-color);
 }
 
+
+.nav-link a{
+    text-decoration: none;
+}
+
 .nav-link:hover {
     background-color: var(--primary-light);
     text-decoration: none;
