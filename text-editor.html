@@ -19,10 +19,7 @@
         margin: 2rem auto;
         padding: 20px;
       }
-@media screen and (max-width: 768px) {
-  .editor-container {
-    padding: 10px;
-    margin: 1rem auto;
+
   }
       #editor {
         min-height: 500px;
@@ -128,23 +125,50 @@
     <script>
       // Initialize TinyMCE with all proper settings
       tinymce.init({
-        selector: '#editor',
-        plugins: 'advlist autolink lists link image table code autosave',
-        toolbar: 'undo redo | styleselect | bold italic | bullist numlist | link image table | code',
-        height: 500,
-        branding: false,  // Primary method to remove branding
-        promotion: false, // Newer versions use this instead
-        content_style: `
-          body { 
-            font-family: Arial, sans-serif; 
-            font-size: 14px; 
-            line-height: 1.6; 
-          }
-          /* Backup method to hide branding */
-          .tox-statusbar__branding { 
-            display: none !important; 
-          }
-        `,
+  selector: '#editor',
+  plugins: 'advlist autolink lists link image table code autosave',
+  toolbar: 'undo redo | styleselect | bold italic | bullist numlist | link image table | code',
+  height: 500,
+  branding: false,
+  promotion: false,
+  mobile: {
+    toolbar: [
+      'undo redo | bold italic underline',
+      'bullist numlist | link image',
+      'styleselect | table'
+    ],
+    toolbar_mode: 'scrolling'
+  },
+  content_style: `
+    body { 
+      font-family: Arial, sans-serif; 
+      font-size: 14px; 
+      line-height: 1.6; 
+    }
+    .tox-statusbar__branding { 
+      display: none !important; 
+    }
+    @media (max-width: 768px) {
+      .tox-toolbar__primary {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+      .tox-tbtn {
+        flex: 0 0 auto;
+      }
+    }
+  `,
+          // After TinyMCE initialization
+tinymce.activeEditor.on('init', function() {
+  if (window.innerWidth <= 768) {
+    const toolbar = document.querySelector('.tox-toolbar__primary');
+    if (toolbar) {
+      toolbar.style.overflowX = 'auto';
+      toolbar.style.whiteSpace = 'nowrap';
+    }
+  }
+});
+
         images_upload_handler: function (blobInfo) {
           return new Promise((resolve) => {
             const reader = new FileReader();
