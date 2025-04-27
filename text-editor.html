@@ -158,16 +158,7 @@
       }
     }
   `,
-          // After TinyMCE initialization
-tinymce.activeEditor.on('init', function() {
-  if (window.innerWidth <= 768) {
-    const toolbar = document.querySelector('.tox-toolbar__primary');
-    if (toolbar) {
-      toolbar.style.overflowX = 'auto';
-      toolbar.style.whiteSpace = 'nowrap';
-    }
-  }
-});
+         
 
         images_upload_handler: function (blobInfo) {
           return new Promise((resolve) => {
