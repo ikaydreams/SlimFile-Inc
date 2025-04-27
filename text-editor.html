@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SlimFile Text Editor</title>
+    <!-- TinyMCE -->
+    <script src="https://cdn.jsdelivr.net/npm/tinymce@6.8.2/tinymce.min.js"></script>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="animation.css">
+    <!-- Export libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/docx/7.7.0/index.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+
+    <style>
+      .editor-container {
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 20px;
+      }
+
+      #editor {
+        min-height: 500px;
+        border: 1px solid #ddd;
+        padding: 20px;
+        margin: 20px 0;
+      }
+
+      .toolbar {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 15px;
+      }
+
+      .export-btn {
+        background-color: #f35f96;
+        color: white;
+        margin-top: 30px;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background 0.3s;
+      }
+
+      .export-btn:hover {
+        background: #359c6f;
+      }
+
+      /* PDF export styles */
+      .pdf-content {
+        padding: 20px;
+        line-height: 1.6;
+        font-family: Arial, sans-serif;
+      }
+
+      .pdf-page {
+        page-break-inside: avoid;
+        margin-bottom: 15px;
+      }
+
+      /* Force hide TinyMCE branding */
+      .tox-statusbar__branding {
+        display: none !important;
+      }
+    </style>
+</head>
+<body>
+
+
+ <!-- Mobile menu overlay -->
+ <div id="overlay" class="overlay"></div>
+    
+ <!-- Mobile navigation -->
+ <div id="mobileNav" class="mobile-nav">
+     <button id="mobileNavClose" class="mobile-nav-close">✕</button>
+     <a href="index.html" class="mobile-nav-link">Home</a>
+     <a href="about.html" class="mobile-nav-link">About Us</a>
+     <a href="team.html" class="mobile-nav-link">Our Team</a>
+     <a href="text-editor.html" class="mobile-nav-link active">Text editor</a>
+ </div>
+
+ <div class="container">
+    <header class="header">
+        <h1 class="logo">SlimFile Text Editor</h1>
+        <p class="tagline">Simplicity for all</p>
+        
+        <!-- Desktop navigation -->
+        <nav class="navigation">
+            <a href="index.html" class="nav-link">Home</a>
+            <a href="about.html" class="nav-link">About Us</a>
+            <a href="team.html" class="nav-link">Our Team</a>
+            <a href="text-editor.html" class="mobile-nav-link active">Text editor</a>
+        </nav>
+        
+        <!-- Hamburger menu button -->
+        <div id="hamburgerMenu" class="hamburger-menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+
+    <div class="editor-container">
+        <textarea id="editor"></textarea>
+        <div class="toolbar">
+            <button class="export-btn" onclick="exportPDF()">Download PDF</button>
+            
+        </div>
+        
+    </div>
+
+    <footer class="footer">
+        <p>© <span id="currentYear"></span> SlimFile Inc. All rights reserved.</p>
+        <p>Secure browser-based file compression</p>
+    </footer>
+
+    <script>
+      // Initialize TinyMCE with all proper settings
+      tinymce.init({
+        selector: '#editor',
+        plugins: 'advlist autolink lists link image table code autosave',
+        toolbar: 'undo redo | styleselect | bold italic | bullist numlist | link image table | code',
+        height: 500,
+        branding: false,  // Primary method to remove branding
+        promotion: false, // Newer versions use this instead
+        content_style: `
+          body { 
+            font-family: Arial, sans-serif; 
+            font-size: 14px; 
+            line-height: 1.6; 
+          }
+          /* Backup method to hide branding */
+          .tox-statusbar__branding { 
+            display: none !important; 
+          }
+        `,
+        images_upload_handler: function (blobInfo) {
+          return new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(blobInfo.blob());
+            reader.onloadend = () => resolve(reader.result);
+          });
+        },
+        autosave_ask_before_unload: true,
+        autosave_interval: '20s',
+        autosave_retention: '30m',
+        autosave_restore_when_empty: true
+      });
+
+      // Rest of your code remains the same...
+      function exportPDF() {
+        const content = tinymce.activeEditor.getContent();
+        const element = document.createElement('div');
+        element.className = 'pdf-content';
+
+        let processedContent = content
+          .replace(/<p([^>]*)>/g, '<p class="pdf-page"$1>')
+          .replace(/<(h[1-6])([^>]*)>/g, '<$1 class="pdf-page"$2>')
+          .replace(/<(ul|ol)([^>]*)>/g, '<$1 class="pdf-page"$2>')
+          .replace(/<table([^>]*)>/g, '<table class="pdf-page"$1>');
+
+        element.innerHTML = processedContent;
+
+        const options = {
+          margin: [15, 15],
+          filename: `document-${Date.now()}.pdf`,
+          html2canvas: {
+            scale: 2,
+            letterRendering: true,
+            useCORS: true,
+            logging: false,
+            allowTaint: true
+          },
+          jsPDF: {
+            unit: 'mm',
+            format: 'a4',
+            orientation: 'portrait',
+            hotfixes: ["px_scaling"]
+          }
+        };
+
+        html2pdf()
+          .set(options)
+          .from(element)
+          .save()
+          .catch(err => console.error('PDF export error:', err));
+      }
+
+      function exportWord() {
+        const content = tinymce.activeEditor.getContent();
+        const paragraphs = [];
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = content;
+
+        Array.from(tempDiv.childNodes).forEach(node => {
+          if (node.nodeType === Node.TEXT_NODE && node.textContent.trim()) {
+            paragraphs.push(
+              new docx.Paragraph({
+                children: [new docx.TextRun(node.textContent)]
+              })
+            );
+          } else if (node.nodeType === Node.ELEMENT_NODE) {
+            const text = node.textContent;
+            if (text.trim()) {
+              const paragraph = new docx.Paragraph({
+                children: [new docx.TextRun(text)]
+              });
+
+              if (node.tagName === 'STRONG' || node.tagName === 'B') {
+                paragraph.children[0].bold = true;
+              }
+              if (node.tagName === 'EM' || node.tagName === 'I') {
+                paragraph.children[0].italic = true;
+              }
+              if (node.tagName === 'U') {
+                paragraph.children[0].underline = {};
+              }
+
+              paragraphs.push(paragraph);
+            }
+          }
+        });
+
+        const doc = new docx.Document({
+          sections: [{
+            properties: {},
+            children: paragraphs
+          }]
+        });
+
+        docx.Packer.toBlob(doc)
+          .then(blob => {
+            saveAs(blob, `document-${Date.now()}.docx`);
+          })
+          .catch(err => console.error('Word export error:', err));
+      }
+    </script>
+    <script src="app.js"></script>
+</body>
+</html>
