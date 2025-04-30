@@ -1,0 +1,1546 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>slimFile Text Editor</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Inter:wght@400;500;700&family=Merriweather:wght@400;700&family=Lato:wght@400;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* Reset and Base Styles */
+    :root {
+      --primary: #9f7aea;
+      --primary-dark: #ea3e83;
+      --primary-light: rgba(156, 39, 176, 0.1);
+      --secondary: #ea3e83;
+      --secondary-dark: #ea3e83;
+      --text-dark: black;
+      --text-light: #ffffff;
+      --text-muted: #ffffff;
+      --border-color: #e5e7eb;
+      --bg-light: #1a202c;
+      --bg-white: white;
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      --radius-md: 0.375rem;
+      --radius-lg: 0.5rem;
+      --font-sans: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    }
+
+
+    
+
+
+
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      font-size: 16px;
+      line-height: 1.5;
+      color: var(--text-dark);
+      background-color: #1a202c;
+    }
+
+    /* Editor Container */
+    .editor-container {
+      display: flex;
+      flex-direction: column;
+      max-width: 1200px;
+      min-height: 100vh;
+      margin: 0 auto;
+      background-color: var(--bg-white);
+      box-shadow: var(--shadow-lg);
+    }
+
+    /* Header Styles */
+    .editor-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--border-color);
+      background-color: var(--bg-white);
+    }
+
+    .logo-section {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .logo {
+      font-weight: bold;
+      font-size: 1.25rem;
+      color: var(--primary);
+    }
+
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 0.875rem;
+      display: none;
+    }
+
+    @media (min-width: 640px) {
+      .subtitle {
+        display: block;
+      }
+    }
+
+    .header-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .status-message {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      opacity: 0;
+      transition: opacity 0.3s ease-in-out;
+    }
+
+    .status-message.visible {
+      opacity: 1;
+    }
+
+    .export-buttons {
+      display: flex;
+      gap: 0.5rem;
+      margin-left: 1rem;
+    }
+
+    .btn {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.375rem 0.75rem;
+      border-radius: var(--radius-md);
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: none;
+      outline: none;
+    }
+
+    .btn-text {
+      display: none;
+    }
+
+    @media (min-width: 640px) {
+      .btn-text {
+        display: inline;
+      }
+    }
+
+    .btn-primary {
+      background-color: var(--primary);
+      color: var(--text-light);
+    }
+
+    .btn-primary:hover {
+      background-color: var(--primary-dark);
+    }
+
+    .btn-secondary {
+      background-color: var(--secondary);
+      color: var(--text-light);
+    }
+
+    .btn-secondary:hover {
+      background-color: var(--secondary-dark);
+    }
+
+    .btn-light {
+      background-color: #f3f4f6;
+      color: var(--text-dark);
+    }
+
+    .btn-light:hover {
+      background-color: #e5e7eb;
+    }
+
+    .btn-assistant {
+      background-image: linear-gradient(to right, var(--primary), var(--secondary));
+      color: var(--text-light);
+      transition: all 0.3s ease;
+    }
+
+    .btn-assistant:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-1px);
+    }
+
+    .mobile-menu-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 2rem;
+      height: 2rem;
+      border-radius: var(--radius-md);
+      background-color: transparent;
+      color: black;
+      border: none;
+      cursor: pointer;
+    }
+
+    .mobile-menu-btn:hover {
+      background-color: violet;
+    }
+
+    @media (min-width: 640px) {
+      .mobile-menu-btn {
+        display: none;
+      }
+    }
+
+    /* Toolbar Styles */
+    .editor-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      padding: 0.5rem;
+      border-bottom: 1px solid var(--border-color);
+      background-color: var(--bg-white);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .toolbar-section {
+      display: flex;
+      align-items: center;
+      margin-right: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .toolbar-divider {
+      width: 1px;
+      height: 1.5rem;
+      background-color: var(--border-color);
+      margin: 0 0.5rem;
+    }
+
+    .toolbar-btn {
+      display: flex;
+      align-items: center;
+      padding: 0.5rem;
+      border-radius: var(--radius-md);
+      background-color: transparent;
+      color: var(--text-dark);
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .toolbar-btn:hover {
+      background-color: var(--primary-light);
+      color: var(--primary);
+    }
+
+    .toolbar-btn.active {
+      background-color: var(--primary-light);
+      color: var(--primary);
+    }
+
+    .dropdown {
+      position: relative;
+    }
+
+    .dropdown-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    .dropdown-text {
+      font-size: 0.875rem;
+    }
+
+    .dropdown-panel {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      width: 12rem;
+      background-color: var(--bg-white);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-md);
+      border: 1px solid var(--border-color);
+      z-index: 20;
+      max-height: 16rem;
+      overflow-y: auto;
+      transform-origin: top;
+      transform: scaleY(0);
+      opacity: 0;
+      pointer-events: none;
+      transition: transform 0.1s ease-out, opacity 0.1s ease-out;
+    }
+
+    .dropdown.open .dropdown-panel {
+      transform: scaleY(1);
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .dropdown-item {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      padding: 0.5rem 1rem;
+      text-align: left;
+      font-size: 0.875rem;
+      background-color: transparent;
+      color: var(--text-dark);
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .dropdown-item:hover {
+      background-color: #f3f4f6;
+      color: var(--primary);
+    }
+
+    .color-panel {
+      width: auto;
+      padding: 0.5rem;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 0.5rem;
+    }
+
+    .color-item {
+      width: 1.5rem;
+      height: 1.5rem;
+      border-radius: 9999px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .color-item:hover {
+      box-shadow: 0 0 0 2px var(--primary-light);
+    }
+
+    .color-swatch {
+      width: 0.5rem;
+      height: 0.5rem;
+      border-radius: 9999px;
+      margin-left: 0.25rem;
+    }
+
+    .spacing-value {
+      display: inline-block;
+      width: 1.25rem;
+      margin-right: 0.5rem;
+    }
+
+    /* Editor Content Styles */
+    .editor-content-container {
+      flex: 1;
+      padding: 1.5rem 1rem;
+      overflow-y: auto;
+    }
+
+    .editor-content {
+      width: 100%;
+      max-width: 48rem;
+      min-height: 70vh;
+      margin: 0 auto;
+      padding: 1rem;
+      background-color: var(--bg-white);
+      border-radius: var(--radius-md);
+      outline: none;
+      font-family: 'Roboto', sans-serif;
+      font-size: 1rem;
+      line-height: 1.5;
+      color: var(--text-dark);
+      word-break: break-word;
+    }
+
+    .editor-content:focus {
+      outline: none;
+    }
+
+    .editor-content h1 {
+      font-size: 1.875rem;
+      font-weight: bold;
+      margin-bottom: 1rem;
+    }
+
+    .editor-content h2 {
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin-bottom: 0.75rem;
+    }
+
+    .editor-content p {
+      margin-bottom: 1rem;
+    }
+
+    .editor-content ul,
+    .editor-content ol {
+      margin-bottom: 1rem;
+      padding-left: 2rem;
+    }
+
+    .editor-content table {
+      border-collapse: collapse;
+      width: 100%;
+      margin-bottom: 1rem;
+    }
+
+    .editor-content th,
+    .editor-content td {
+      border: 1px solid #d1d5db;
+      padding: 0.5rem;
+    }
+
+    .editor-content th {
+      background-color: #f3f4f6;
+      font-weight: bold;
+    }
+
+    /* Status Bar */
+    .editor-statusbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.5rem 1rem;
+      border-top: 1px solid var(--border-color);
+      background-color: #1a202c;
+      font-size: 0.875rem;
+      color: var(--text-muted);
+    }
+
+    .save-status {
+      font-size: 0.75rem;
+    }
+
+    /* Dialog Styles */
+    .dialog-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 50;
+    }
+
+    .dialog-box {
+      width: 100%;
+      max-width: 28rem;
+      background-color: var(--bg-white);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg);
+      overflow: hidden;
+    }
+
+    .dialog-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .ai-header {
+      background-image: linear-gradient(to right, var(--primary), var(--secondary));
+      color: var(--text-light);
+    }
+
+    .dialog-header h3 {
+      font-size: 1.125rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .close-btn {
+      background-color: transparent;
+      border: none;
+      color: inherit;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+
+    .dialog-content {
+      padding: 1rem;
+    }
+
+    .dialog-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.5rem;
+      padding: 1rem;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 500;
+      margin-bottom: 0.25rem;
+      color: var(--text-dark);
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 0.5rem 0.75rem;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      font-size: 0.875rem;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+
+    .form-input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px var(--primary-light);
+    }
+
+    .form-row {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .form-row .form-group {
+      flex: 1;
+    }
+
+    /* AI Assistant Styles */
+    .ai-intro {
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+    }
+
+    .ai-suggestions {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .ai-suggestion {
+      display: flex;
+      align-items: flex-start;
+      padding: 0.75rem;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      transition: all 0.2s ease;
+    }
+
+    .ai-suggestion:hover {
+      border-color: var(--primary);
+    }
+
+    .ai-suggestion-text {
+      flex: 1;
+      font-size: 0.875rem;
+    }
+
+    .ai-suggestion-apply {
+      margin-left: 0.5rem;
+      background-color: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .ai-suggestion-apply:hover {
+      color: var(--primary);
+    }
+
+    .ai-loading {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem 0;
+      color: var(--text-muted);
+    }
+
+    .spinner {
+      font-size: 1.5rem;
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Font Classes */
+    .font-roboto { font-family: 'Roboto', sans-serif; }
+    .font-inter { font-family: 'Inter', sans-serif; }
+    .font-times { font-family: 'Times New Roman', serif; }
+    .font-lato { font-family: 'Lato', sans-serif; }
+    .font-merriweather { font-family: 'Merriweather', serif; }
+    .font-opensans { font-family: 'Open Sans', sans-serif; }
+    .font-serif { font-family: serif; }
+    .font-mono { font-family: monospace; }
+
+    /* Utility Classes */
+    .hidden {
+      display: none;
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 640px) {
+      .toolbar-section:not(.toolbar-section-essential) {
+        display: none;
+      }
+      
+      .mobile-menu-open .toolbar-section {
+        display: flex;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Mobile menu overlay -->
+<div id="overlay" class="overlay"></div>
+    
+<!-- Mobile navigation -->
+<div id="mobileNav" class="mobile-nav">
+    <button id="mobileNavClose" class="mobile-nav-close">✕</button>
+    <a href="index.html" class="mobile-nav-link">Home</a>
+    <a href="about.html" class="mobile-nav-link">About Us</a>
+    <a href="team.html" class="mobile-nav-link">Our Team</a>
+    <a href="text-editor.html" class="nav-link active">Text Editor</a>
+</div>
+
+<div class="container">
+    <header class="header">
+        <h1 class="logo">SlimFile Inc.</h1>
+        <p class="tagline">Reduce file sizes smartly without quality loss</p>
+        
+        <!-- Desktop navigation -->
+        <nav class="navigation">
+            <a href="index.html" class="nav-link">Home</a>
+            <a href="about.html" class="nav-link">About Us</a>
+            <a href="team.html" class="nav-link">Our Team</a>
+            <a href="text-editor.html" class="nav-link active">Text Editor</a>
+        </nav>
+        
+        <!-- Hamburger menu button -->
+        <div id="hamburgerMenu" class="hamburger-menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </header>
+
+
+
+  <div class="editor-container">
+    <!-- Header -->
+    <header class="editor-header">
+      <div class="logo-section">
+        <div class="logo">SlimFile</div>
+        <span class="subtitle">Text Editor</span>
+      </div>
+      
+      <div class="header-controls">
+        <div id="status-message" class="status-message"></div>
+        
+        <div class="export-buttons">
+          <button id="ai-assistant-btn" class="btn btn-assistant" title="AI Assistant">
+            <i class="fas fa-magic"></i>
+            <span class="btn-text">AI Assistant</span>
+          </button>
+          <button id="export-pdf-btn" class="btn btn-primary" title="Export as PDF">
+            <i class="fas fa-file-pdf"></i>
+            <span class="btn-text">PDF</span>
+          </button>
+          <button id="export-docx-btn" class="btn btn-secondary" title="Export as DOCX">
+            <i class="fas fa-file-word"></i>
+            <span class="btn-text">DOCX</span>
+          </button>
+        </div>
+        
+        <button id="mobile-menu-btn" class="mobile-menu-btn">
+          <i class="fas fa-ellipsis-v"></i>
+        </button>
+      </div>
+    </header>
+    
+    <!-- Toolbar -->
+    <div id="editor-toolbar" class="editor-toolbar">
+      <!-- Essential formatting -->
+      <div class="toolbar-section toolbar-section-essential">
+        <button class="toolbar-btn" data-command="bold" title="Bold">
+          <i class="fas fa-bold"></i>
+        </button>
+        <button class="toolbar-btn" data-command="italic" title="Italic">
+          <i class="fas fa-italic"></i>
+        </button>
+        <button class="toolbar-btn" data-command="underline" title="Underline">
+          <i class="fas fa-underline"></i>
+        </button>
+        <div class="toolbar-divider"></div>
+      </div>
+      
+      <!-- Text formatting -->
+      <div class="toolbar-section">
+        <!-- Font family dropdown -->
+        <div class="dropdown" data-dropdown="font-family">
+          <button class="toolbar-btn dropdown-btn" title="Font Family">
+            <span class="dropdown-text">Roboto</span>
+            <i class="fas fa-chevron-down"></i>
+          </button>
+          <div class="dropdown-panel">
+            <button class="dropdown-item" data-value="Roboto">Roboto</button>
+            <button class="dropdown-item" data-value="Inter">Inter</button>
+            <button class="dropdown-item" data-value="Times New Roman">Times New Roman</button>
+            <button class="dropdown-item" data-value="Lato">Lato</button>
+            <button class="dropdown-item" data-value="Merriweather">Merriweather</button>
+            <button class="dropdown-item" data-value="Open Sans">Open Sans</button>
+            <button class="dropdown-item" data-value="serif">Serif</button>
+            <button class="dropdown-item" data-value="monospace">Monospace</button>
+          </div>
+        </div>
+        
+        <!-- Font size dropdown -->
+        <div class="dropdown" data-dropdown="font-size">
+          <button class="toolbar-btn dropdown-btn" title="Font Size">
+            <span class="dropdown-text">16</span>
+            <i class="fas fa-chevron-down"></i>
+          </button>
+          <div class="dropdown-panel">
+            <button class="dropdown-item" data-value="12">12</button>
+            <button class="dropdown-item" data-value="14">14</button>
+            <button class="dropdown-item" data-value="16">16</button>
+            <button class="dropdown-item" data-value="18">18</button>
+            <button class="dropdown-item" data-value="24">24</button>
+            <button class="dropdown-item" data-value="36">36</button>
+          </div>
+        </div>
+        
+        <!-- Text color dropdown -->
+        <div class="dropdown" data-dropdown="text-color">
+          <button class="toolbar-btn dropdown-btn" title="Text Color">
+            <i class="fas fa-font"></i>
+            <div class="color-swatch" style="background-color: #212121;"></div>
+          </button>
+          <div class="dropdown-panel color-panel">
+            <button class="color-item" data-value="#212121" style="background-color: #212121;"></button>
+            <button class="color-item" data-value="#ef4444" style="background-color: #ef4444;"></button>
+            <button class="color-item" data-value="#3b82f6" style="background-color: #3b82f6;"></button>
+            <button class="color-item" data-value="#22c55e" style="background-color: #22c55e;"></button>
+            <button class="color-item" data-value="#9C27B0" style="background-color: #9C27B0;"></button>
+            <button class="color-item" data-value="#E91E63" style="background-color: #E91E63;"></button>
+            <button class="color-item" data-value="#eab308" style="background-color: #eab308;"></button>
+            <button class="color-item" data-value="#f97316" style="background-color: #f97316;"></button>
+            <button class="color-item" data-value="#6b7280" style="background-color: #6b7280;"></button>
+            <button class="color-item" data-value="#d1d5db" style="background-color: #d1d5db;"></button>
+          </div>
+        </div>
+        
+        <div class="toolbar-divider"></div>
+      </div>
+      
+      <!-- Paragraph formatting -->
+      <div class="toolbar-section">
+        <button class="toolbar-btn" data-command="justifyLeft" title="Align Left">
+          <i class="fas fa-align-left"></i>
+        </button>
+        <button class="toolbar-btn" data-command="justifyCenter" title="Align Center">
+          <i class="fas fa-align-center"></i>
+        </button>
+        <button class="toolbar-btn" data-command="justifyRight" title="Align Right">
+          <i class="fas fa-align-right"></i>
+        </button>
+        <button class="toolbar-btn" data-command="justifyFull" title="Justify">
+          <i class="fas fa-align-justify"></i>
+        </button>
+        
+        <!-- Line spacing dropdown -->
+        <div class="dropdown" data-dropdown="line-spacing">
+          <button class="toolbar-btn dropdown-btn" title="Line Spacing">
+            <i class="fas fa-text-height"></i>
+            <i class="fas fa-chevron-down"></i>
+          </button>
+          <div class="dropdown-panel">
+            <button class="dropdown-item" data-command="lineHeight" data-value="1">
+              <span class="spacing-value">1</span>Single
+            </button>
+            <button class="dropdown-item" data-command="lineHeight" data-value="1.5">
+              <span class="spacing-value">1.5</span>1.5 lines
+            </button>
+            <button class="dropdown-item" data-command="lineHeight" data-value="2">
+              <span class="spacing-value">2</span>Double
+            </button>
+            <button class="dropdown-item" data-command="lineHeight" data-value="2.5">
+              <span class="spacing-value">2.5</span>2.5 lines
+            </button>
+          </div>
+        </div>
+        
+        <div class="toolbar-divider"></div>
+      </div>
+      
+      <!-- Lists and indentation -->
+      <div class="toolbar-section">
+        <button class="toolbar-btn" data-command="insertUnorderedList" title="Bullet List">
+          <i class="fas fa-list-ul"></i>
+        </button>
+        <button class="toolbar-btn" data-command="insertOrderedList" title="Numbered List">
+          <i class="fas fa-list-ol"></i>
+        </button>
+        <button class="toolbar-btn" data-command="outdent" title="Decrease Indent">
+          <i class="fas fa-outdent"></i>
+        </button>
+        <button class="toolbar-btn" data-command="indent" title="Increase Indent">
+          <i class="fas fa-indent"></i>
+        </button>
+        <div class="toolbar-divider"></div>
+      </div>
+      
+      <!-- Insert options -->
+      <div class="toolbar-section">
+        <button class="toolbar-btn" id="insert-link-btn" title="Insert Link">
+          <i class="fas fa-link"></i>
+        </button>
+        <button class="toolbar-btn" data-command="unlink" title="Remove Link">
+          <i class="fas fa-unlink"></i>
+        </button>
+        <button class="toolbar-btn" id="insert-image-btn" title="Insert Image">
+          <i class="fas fa-image"></i>
+        </button>
+        <button class="toolbar-btn" id="insert-table-btn" title="Insert Table">
+          <i class="fas fa-table"></i>
+        </button>
+      </div>
+    </div>
+    
+    <!-- Editor Content -->
+    <div class="editor-content-container">
+      <div id="editor-content" class="editor-content" contenteditable="true"></div>
+    </div>
+    
+    <!-- Status Bar -->
+    <div class="editor-statusbar">
+      <div id="word-count">0 words</div>
+      <div class="save-status">Auto-saved: <span id="last-saved">Just now</span></div>
+    </div>
+  </div>
+  
+  <!-- Format Dialogs -->
+  <div id="format-dialog" class="dialog-overlay hidden">
+    <div class="dialog-box">
+      <div class="dialog-header">
+        <h3 id="dialog-title">Insert Link</h3>
+        <button id="close-dialog-btn" class="close-btn"><i class="fas fa-times"></i></button>
+      </div>
+      <div id="dialog-content" class="dialog-content">
+        <!-- Dialog content will be dynamically inserted here -->
+      </div>
+      <div class="dialog-footer">
+        <button id="cancel-dialog-btn" class="btn btn-light">Cancel</button>
+        <button id="apply-dialog-btn" class="btn btn-primary">Insert</button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- AI Assistant Dialog -->
+  <div id="ai-assistant-dialog" class="dialog-overlay hidden">
+    <div class="dialog-box">
+      <div class="dialog-header ai-header">
+        <h3><i class="fas fa-magic"></i> AI Writing Assistant</h3>
+        <button id="close-ai-dialog-btn" class="close-btn"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="dialog-content">
+        <p class="ai-intro">AI has analyzed your text and suggests the following improvements:</p>
+        
+        <div id="ai-suggestions" class="ai-suggestions">
+          <div class="ai-loading">
+            <div class="spinner"><i class="fas fa-circle-notch"></i></div>
+            <p>Analyzing your text...</p>
+          </div>
+        </div>
+      </div>
+      <div class="dialog-footer">
+        <button id="close-ai-btn" class="btn btn-light">Close</button>
+      </div>
+    </div>
+  </div>
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script src="https://unpkg.com/docx@8.2.3/build/index.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Editor elements
+      const editor = document.getElementById('editor-content');
+      const toolbar = document.getElementById('editor-toolbar');
+      const statusMessage = document.getElementById('status-message');
+      const wordCount = document.getElementById('word-count');
+      const lastSaved = document.getElementById('last-saved');
+      const formatDialog = document.getElementById('format-dialog');
+      const aiAssistantDialog = document.getElementById('ai-assistant-dialog');
+      const aiSuggestions = document.getElementById('ai-suggestions');
+      
+      // Dialog elements
+      const dialogTitle = document.getElementById('dialog-title');
+      const dialogContent = document.getElementById('dialog-content');
+      const applyDialogBtn = document.getElementById('apply-dialog-btn');
+      const cancelDialogBtn = document.getElementById('cancel-dialog-btn');
+      const closeDialogBtn = document.getElementById('close-dialog-btn');
+      
+      // AI Assistant dialog elements
+      const closeAiDialogBtn = document.getElementById('close-ai-dialog-btn');
+      const closeAiBtn = document.getElementById('close-ai-btn');
+      
+      // Buttons
+      const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+      const exportPdfBtn = document.getElementById('export-pdf-btn');
+      const exportDocxBtn = document.getElementById('export-docx-btn');
+      const insertLinkBtn = document.getElementById('insert-link-btn');
+      const insertImageBtn = document.getElementById('insert-image-btn');
+      const insertTableBtn = document.getElementById('insert-table-btn');
+      const aiAssistantBtn = document.getElementById('ai-assistant-btn');
+      
+      // State variables
+      let currentDialogType = '';
+      let autoSaveInterval;
+      let currentFont = 'Roboto';
+      let currentFontSize = '16';
+      let currentColor = '#212121';
+      
+      // Initialize editor
+      initEditor();
+      
+      // Set up event listeners
+      setupEventListeners();
+      
+      // Initialize editor
+      function initEditor() {
+        // Load saved content if available
+        const savedContent = localStorage.getItem('slimFileEditorContent');
+        if (savedContent) {
+          editor.innerHTML = savedContent;
+        } else {
+          // Set default content
+          editor.innerHTML = `
+            <h1>Welcome to slimFile Text Editor</h1>
+            <p>This is a powerful text editor similar to Microsoft Word, designed for your web application needs. You can format text, create lists, add links and much more.</p>
+            <h2>Key Features:</h2>
+            <ul>
+              <li>Rich text formatting with intuitive controls</li>
+              <li>Export your documents as PDF or DOCX</li>
+              <li>Responsive design that works on all devices</li>
+              <li>Clean, modern interface with beautiful styling</li>
+            </ul>
+            <p>Try formatting this text using the toolbar above or simply start typing to create your own content.</p>
+          `;
+        }
+        
+        // Update word count
+        updateWordCount();
+        
+        // Set up auto-save
+        autoSaveInterval = setInterval(autoSave, 10000); // Every 10 seconds
+      }
+      
+      function setupEventListeners() {
+        // Toolbar command buttons
+        toolbar.addEventListener('click', function(e) {
+          const button = e.target.closest('.toolbar-btn');
+          if (!button) return;
+          
+          const command = button.dataset.command;
+          const value = button.dataset.value;
+          
+          if (command) {
+            handleFormatCommand(command, value);
+            e.preventDefault();
+          }
+        });
+        
+        // Editor input event
+        editor.addEventListener('input', function() {
+          updateWordCount();
+          showStatusMessage('Editing...');
+        });
+        
+        // Dropdowns
+        setupDropdowns();
+        
+        // Dialog buttons
+        insertLinkBtn.addEventListener('click', function() {
+          showDialog('link');
+        });
+        
+        insertImageBtn.addEventListener('click', function() {
+          showDialog('image');
+        });
+        
+        insertTableBtn.addEventListener('click', function() {
+          showDialog('table');
+        });
+        
+        closeDialogBtn.addEventListener('click', closeDialog);
+        cancelDialogBtn.addEventListener('click', closeDialog);
+        applyDialogBtn.addEventListener('click', applyDialogFormat);
+        
+        // AI Assistant
+        aiAssistantBtn.addEventListener('click', showAiAssistant);
+        closeAiDialogBtn.addEventListener('click', closeAiAssistant);
+        closeAiBtn.addEventListener('click', closeAiAssistant);
+        
+        // Export buttons
+        exportPdfBtn.addEventListener('click', exportToPDF);
+        exportDocxBtn.addEventListener('click', exportToDOCX);
+        
+        // Mobile menu
+        mobileMenuBtn.addEventListener('click', toggleMobileMenu);
+      }
+      
+      function setupDropdowns() {
+        const dropdowns = document.querySelectorAll('.dropdown');
+        
+        dropdowns.forEach(dropdown => {
+          const button = dropdown.querySelector('.dropdown-btn');
+          const panel = dropdown.querySelector('.dropdown-panel');
+          
+          button.addEventListener('click', function(e) {
+            dropdown.classList.toggle('open');
+            e.stopPropagation();
+          });
+          
+          // Close dropdown when clicking anywhere else
+          document.addEventListener('click', function(e) {
+            if (!dropdown.contains(e.target)) {
+              dropdown.classList.remove('open');
+            }
+          });
+          
+          // Handle dropdown item clicks
+          if (panel) {
+            panel.addEventListener('click', function(e) {
+              const item = e.target.closest('.dropdown-item');
+              if (!item) return;
+              
+              const dropdownType = dropdown.dataset.dropdown;
+              const value = item.dataset.value;
+              const command = item.dataset.command;
+              
+              if (dropdownType === 'font-family') {
+                handleFontChange(value);
+              } else if (dropdownType === 'font-size') {
+                handleFontSizeChange(value);
+              } else if (dropdownType === 'text-color') {
+                handleColorChange(value);
+              } else if (command) {
+                handleFormatCommand(command, value);
+              }
+              
+              dropdown.classList.remove('open');
+            });
+          }
+        });
+        
+        // Color dropdown
+        const colorItems = document.querySelectorAll('.color-item');
+        colorItems.forEach(item => {
+          item.addEventListener('click', function() {
+            const color = this.dataset.value;
+            handleColorChange(color);
+          });
+        });
+      }
+      
+      // Format handling functions
+      function handleFormatCommand(command, value) {
+        if (command === 'lineHeight') {
+          applyLineHeight(value);
+        } else {
+          // Standard execCommand
+          document.execCommand(command, false, value);
+        }
+        
+        // Focus back on editor
+        editor.focus();
+      }
+      
+      function handleFontChange(font) {
+        currentFont = font;
+        document.execCommand('fontName', false, font);
+        updateDropdownText('font-family', font);
+      }
+      
+      function handleFontSizeChange(size) {
+        currentFontSize = size;
+        
+        // HTML font size conversion: 1 (smallest) to 7 (largest)
+        const sizeMappings = {
+          '12': '1',
+          '14': '2',
+          '16': '3',
+          '18': '4',
+          '24': '5',
+          '36': '7'
+        };
+        
+        document.execCommand('fontSize', false, sizeMappings[size] || '3');
+        updateDropdownText('font-size', size);
+      }
+      
+      function handleColorChange(color) {
+        currentColor = color;
+        document.execCommand('foreColor', false, color);
+        
+        // Update color swatch
+        const swatch = document.querySelector('[data-dropdown="text-color"] .color-swatch');
+        if (swatch) {
+          swatch.style.backgroundColor = color;
+        }
+      }
+      
+      function applyLineHeight(value) {
+        // Get current selection
+        const selection = window.getSelection();
+        if (selection.rangeCount === 0) return;
+        
+        const range = selection.getRangeAt(0);
+        
+        // If there's a selection, wrap it in a span
+        if (!range.collapsed) {
+          const selectedContent = range.extractContents();
+          const span = document.createElement('span');
+          span.style.lineHeight = value || '1';
+          span.appendChild(selectedContent);
+          range.insertNode(span);
+        } else {
+          // If no selection, find the current block element
+          let currentNode = range.startContainer;
+          
+          // Walk up the DOM tree to find a block-level element
+          while (currentNode && currentNode !== editor) {
+            if (currentNode.nodeType === Node.ELEMENT_NODE) {
+              const element = currentNode;
+              const display = window.getComputedStyle(element).display;
+              
+              if (display === 'block' || display === 'flex' || 
+                  element.tagName === 'P' || element.tagName === 'DIV' || 
+                  element.tagName === 'H1' || element.tagName === 'H2' || 
+                  element.tagName === 'H3' || element.tagName === 'H4' || 
+                  element.tagName === 'H5' || element.tagName === 'H6' || 
+                  element.tagName === 'LI') {
+                element.style.lineHeight = value || '1';
+                break;
+              }
+            }
+            
+            currentNode = currentNode.parentNode;
+          }
+          
+          // If no block element found, just create a new paragraph
+          if (currentNode === editor) {
+            document.execCommand('formatBlock', false, 'p');
+            const p = range.startContainer.parentNode;
+            if (p && p.tagName === 'P') {
+              p.style.lineHeight = value || '1';
+            }
+          }
+        }
+      }
+      
+      // Dialog functions
+      function showDialog(type) {
+        currentDialogType = type;
+        
+        // Set dialog title
+        if (type === 'link') {
+          dialogTitle.textContent = 'Insert Link';
+          dialogContent.innerHTML = `
+            <div class="form-group">
+              <label for="link-text">Text</label>
+              <input type="text" id="link-text" class="form-input">
+            </div>
+            <div class="form-group">
+              <label for="link-url">URL</label>
+              <input type="text" id="link-url" class="form-input" placeholder="https://example.com">
+            </div>
+          `;
+          applyDialogBtn.textContent = 'Insert';
+          
+          // Pre-fill with selected text if any
+          setTimeout(() => {
+            const linkTextInput = document.getElementById('link-text');
+            if (linkTextInput) {
+              linkTextInput.value = getSelectedText() || '';
+            }
+          }, 0);
+        } else if (type === 'image') {
+          dialogTitle.textContent = 'Insert Image';
+          dialogContent.innerHTML = `
+            <div class="form-group">
+              <label for="image-url">Image URL</label>
+              <input type="text" id="image-url" class="form-input" placeholder="https://example.com/image.jpg">
+            </div>
+            <div class="form-group">
+              <label for="image-alt">Alt Text</label>
+              <input type="text" id="image-alt" class="form-input" placeholder="Image description">
+            </div>
+          `;
+          applyDialogBtn.textContent = 'Insert';
+        } else if (type === 'table') {
+          dialogTitle.textContent = 'Insert Table';
+          dialogContent.innerHTML = `
+            <div class="form-row">
+              <div class="form-group">
+                <label for="table-rows">Rows</label>
+                <input type="number" id="table-rows" class="form-input" value="3" min="1" max="10">
+              </div>
+              <div class="form-group">
+                <label for="table-cols">Columns</label>
+                <input type="number" id="table-cols" class="form-input" value="3" min="1" max="10">
+              </div>
+            </div>
+          `;
+          applyDialogBtn.textContent = 'Insert';
+        }
+        
+        formatDialog.classList.remove('hidden');
+      }
+      
+      function closeDialog() {
+        formatDialog.classList.add('hidden');
+        currentDialogType = '';
+      }
+      
+      function applyDialogFormat() {
+        switch (currentDialogType) {
+          case 'link':
+            const linkText = document.getElementById('link-text')?.value;
+            const linkUrl = document.getElementById('link-url')?.value;
+            
+            if (linkUrl) {
+              const selectedText = getSelectedText();
+              if (selectedText) {
+                document.execCommand('createLink', false, linkUrl);
+              } else {
+                insertHtmlAtCursor(`<a href="${linkUrl}">${linkText || linkUrl}</a>`);
+              }
+            }
+            break;
+            
+          case 'image':
+            const imageUrl = document.getElementById('image-url')?.value;
+            const imageAlt = document.getElementById('image-alt')?.value;
+            
+            if (imageUrl) {
+              insertHtmlAtCursor(`<img src="${imageUrl}" alt="${imageAlt || ''}" style="max-width: 100%">`);
+            }
+            break;
+            
+          case 'table':
+            const rows = parseInt(document.getElementById('table-rows')?.value || '3', 10);
+            const cols = parseInt(document.getElementById('table-cols')?.value || '3', 10);
+            
+            if (rows && cols) {
+              insertTable(rows, cols);
+            }
+            break;
+        }
+        
+        closeDialog();
+        editor.focus();
+      }
+      
+      // AI Assistant functions
+      function showAiAssistant() {
+        aiAssistantDialog.classList.remove('hidden');
+        
+        // Clear previous suggestions
+        aiSuggestions.innerHTML = `
+          <div class="ai-loading">
+            <div class="spinner"><i class="fas fa-circle-notch"></i></div>
+            <p>Analyzing your text...</p>
+          </div>
+        `;
+        
+        // Simulate AI processing
+        showStatusMessage('AI analyzing your text...');
+        
+        setTimeout(() => {
+          // Generate AI suggestions
+          const suggestions = [
+            "Improve paragraph flow with better transitions",
+            "Use more descriptive language in the introduction",
+            "Consider adding supporting evidence to strengthen arguments",
+            "Rephrase passive sentences for more active voice",
+            "Add a conclusion that summarizes key points"
+          ];
+          
+          // Display suggestions
+          aiSuggestions.innerHTML = '';
+          suggestions.forEach((suggestion, index) => {
+            const suggestionElement = document.createElement('div');
+            suggestionElement.className = 'ai-suggestion';
+            suggestionElement.innerHTML = `
+              <div class="ai-suggestion-text">${suggestion}</div>
+              <button class="ai-suggestion-apply" data-index="${index}" title="Apply suggestion">
+                <i class="fas fa-magic"></i>
+              </button>
+            `;
+            aiSuggestions.appendChild(suggestionElement);
+          });
+          
+          // Add event listeners to suggestion buttons
+          const applyButtons = document.querySelectorAll('.ai-suggestion-apply');
+          applyButtons.forEach(button => {
+            button.addEventListener('click', function() {
+              const index = parseInt(this.dataset.index, 10);
+              applyAiSuggestion(index);
+            });
+          });
+          
+          showStatusMessage('AI suggestions ready!');
+        }, 1500);
+      }
+      
+      function closeAiAssistant() {
+        aiAssistantDialog.classList.add('hidden');
+      }
+      
+      function applyAiSuggestion(index) {
+        const selection = window.getSelection();
+        if (selection.rangeCount === 0) {
+          showStatusMessage('Please select text to apply suggestion');
+          return;
+        }
+        
+        const range = selection.getRangeAt(0);
+        if (range.collapsed) {
+          showStatusMessage('Please select text to apply suggestion');
+          return;
+        }
+        
+        // Apply highlight to selected text
+        const content = range.extractContents();
+        const span = document.createElement('span');
+        span.style.backgroundColor = 'rgba(233, 30, 99, 0.1)';
+        span.style.color = '#E91E63';
+        span.appendChild(content);
+        range.insertNode(span);
+        
+        showStatusMessage('Applied AI suggestion!');
+        closeAiAssistant();
+      }
+      
+      // Helper functions
+      function getSelectedText() {
+        const selection = window.getSelection();
+        if (selection.rangeCount === 0) return '';
+        return selection.toString();
+      }
+      
+      function insertHtmlAtCursor(html) {
+        document.execCommand('insertHTML', false, html);
+      }
+      
+      function insertTable(rows, cols) {
+        // Create table element
+        const table = document.createElement('table');
+        table.className = 'border-collapse w-full mb-4';
+        table.style.borderCollapse = 'collapse';
+        table.style.width = '100%';
+        table.style.marginBottom = '1rem';
+        
+        // Add header row
+        const thead = document.createElement('thead');
+        const headerRow = document.createElement('tr');
+        headerRow.style.backgroundColor = '#f3f4f6';
+        
+        for (let j = 0; j < cols; j++) {
+          const th = document.createElement('th');
+          th.style.border = '1px solid #d1d5db';
+          th.style.padding = '0.5rem';
+          th.style.fontWeight = 'bold';
+          th.innerHTML = `Header ${j+1}`;
+          headerRow.appendChild(th);
+        }
+        
+        thead.appendChild(headerRow);
+        table.appendChild(thead);
+        
+        // Add data rows
+        const tbody = document.createElement('tbody');
+        
+        for (let i = 0; i < rows-1; i++) {
+          const tr = document.createElement('tr');
+          
+          for (let j = 0; j < cols; j++) {
+            const td = document.createElement('td');
+            td.style.border = '1px solid #d1d5db';
+            td.style.padding = '0.5rem';
+            td.innerHTML = '&nbsp;'; // Insert a non-breaking space
+            tr.appendChild(td);
+          }
+          
+          tbody.appendChild(tr);
+        }
+        
+        table.appendChild(tbody);
+        
+        // Insert the table at the cursor position
+        const selection = window.getSelection();
+        if (selection.rangeCount) {
+          const range = selection.getRangeAt(0);
+          range.deleteContents();
+          range.insertNode(table);
+          
+          // Move cursor after the table
+          range.setStartAfter(table);
+          range.collapse(true);
+          selection.removeAllRanges();
+          selection.addRange(range);
+        } else {
+          // Fallback if selection API fails
+          editor.appendChild(table);
+        }
+      }
+      
+      function updateDropdownText(dropdownType, text) {
+        const textElement = document.querySelector(`[data-dropdown="${dropdownType}"] .dropdown-text`);
+        if (textElement) {
+          textElement.textContent = text;
+        }
+      }
+      
+      function updateWordCount() {
+        const text = editor.innerText || '';
+        const words = text.trim().split(/\s+/);
+        const count = text.trim() === '' ? 0 : words.length;
+        wordCount.textContent = `${count} ${count === 1 ? 'word' : 'words'}`;
+      }
+      
+      function autoSave() {
+        const content = editor.innerHTML;
+        localStorage.setItem('slimFileEditorContent', content);
+        
+        const now = new Date();
+        lastSaved.textContent = formatTime(now);
+        showStatusMessage('All changes saved');
+      }
+      
+      function showStatusMessage(message) {
+        statusMessage.textContent = message;
+        statusMessage.classList.add('visible');
+        
+        // Clear after 2 seconds
+        setTimeout(() => {
+          statusMessage.classList.remove('visible');
+        }, 2000);
+      }
+      
+      function formatTime(date) {
+        const hours = date.getHours().toString().padStart(2, '0');
+        const minutes = date.getMinutes().toString().padStart(2, '0');
+        return `${hours}:${minutes}`;
+      }
+      
+      function toggleMobileMenu() {
+        document.body.classList.toggle('mobile-menu-open');
+      }
+      
+      // Export functions
+      async function exportToPDF() {
+        showStatusMessage('Preparing PDF...');
+        
+        try {
+          const content = editor.innerHTML;
+          const element = document.createElement('div');
+          element.innerHTML = content;
+          element.style.padding = '20px';
+          
+          const opt = {
+            margin: [10, 10, 10, 10],
+            filename: 'slimFile_document.pdf',
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2 },
+            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+          };
+          
+          await html2pdf().from(element).set(opt).save();
+          showStatusMessage('PDF downloaded successfully');
+        } catch (error) {
+          console.error('Error exporting to PDF:', error);
+          showStatusMessage('Error exporting to PDF');
+        }
+      }
+      
+      async function exportToDOCX() {
+        showStatusMessage('Preparing DOCX...');
+        
+        try {
+          // Convert HTML to plain text for simple DOCX export
+          const content = editor.innerHTML;
+          const text = htmlToPlainText(content);
+          
+          // Create a new document
+          const doc = new docx.Document({
+            sections: [{
+              properties: {},
+              children: [
+                new docx.Paragraph({
+                  children: [new docx.TextRun(text)]
+                })
+              ]
+            }]
+          });
+          
+          // Generate and save the document
+          const blob = await docx.Packer.toBlob(doc);
+          const url = URL.createObjectURL(blob);
+          
+          const link = document.createElement('a');
+          link.href = url;
+          link.download = 'slimFile_document.docx';
+          link.click();
+          
+          showStatusMessage('DOCX downloaded successfully');
+        } catch (error) {
+          console.error('Error exporting to DOCX:', error);
+          showStatusMessage('Error exporting to DOCX');
+        }
+      }
+      
+      function htmlToPlainText(html) {
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = html;
+        return tempDiv.textContent || tempDiv.innerText || '';
+      }
+    });
+  </script>
+  <footer class="footer">
+    <p>© <span id="currentYear"></span> SlimFile Inc. All rights reserved.</p>
+    <p>Secure browser-based file compression</p>
+</footer>
+<script src="app.js"></script>
+</body>
+</html>
