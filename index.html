@@ -1,346 +1,384 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SlimFile - Reduce file sizes smartly without quality loss</title>
-    <meta name="title" content="SlimFile - Fast & Easy File Compression Tool">
-<meta name="description" content="SlimFile is a powerful file compression tool that reduces the size of PDFs and images while preserving quality. No installation required.">
-    <meta name="robots" content="index, follow">
-<meta name="language" content="en">
-<meta name="author" content="Isaac Abakah, Founder and CEO of SlimFile Inc.">
-    <link rel="icon" href="circle.png" type="image/png">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="manifest" href="/manifest.json">
+    <meta name="description" content="SlimFile Inc. - Reduce file sizes smartly without quality loss">
+    <title>SlimFile Inc. - Smart File Compression</title>
     <script src="/pwa.js"></script>
-
-    <button id="installBtn" style="display: none;">Install SlimFile</button>
-    
-    <!-- PDF.js and PDF-Lib for PDF compression -->
-    <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.4.120/build/pdf.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
-    <script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "WebSite",
-  "name": "SlimFile",
-  "url": "https://slim-file.vercel.app/",
-  "potentialAction": {
-    "@type": "SearchAction",
-    "target": "https://slim-file.vercel.app/search?q={search_term_string}",
-    "query-input": "required name=search_term_string"
-  }
-}
-</script>
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "WebPage",
-  "name": "SlimFile - File Compression Tool",
-  "url": "https://slim-file.vercel.app/"
-}
-</script>
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "WebPage",
-  "name": "About SlimFile",
-  "url": "https://slim-file.vercel.app/about.html"
-}
-</script>
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "WebPage",
-  "name": "SlimFile Team",
-  "url": "https://slim-file.vercel.app/team.html"
-}
-</script>
-
-    <script>
-        /* Initialize PDF.js worker */
-        window.pdfjsLib = window.pdfjsLib || {};
-        window.pdfjsLib.GlobalWorkerOptions = window.pdfjsLib.GlobalWorkerOptions || {};
-        window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.4.120/build/pdf.worker.min.js';
-    </script>
     <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="animation.css">
-    <link rel="canonical" href="https://www.slim-file.vercel.app/"/>
-    <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-QWYM1ML0X8"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-QWYM1ML0X8');
-</script>
-
-    <script>
-  window.addEventListener('appinstalled', () => {
-    console.log('SlimFile installed!');
-    gtag('event', 'pwa_install', {
-      event_category: 'PWA',
-      event_label: 'SlimFile Web App',
-      value: 1
-    });
-  });
-</script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Lottie Player -->
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-    <!-- Mobile menu overlay -->
-    <div id="overlay" class="overlay"></div>
-    
-    <!-- Mobile navigation -->
-    <div id="mobileNav" class="mobile-nav">
-        <button id="mobileNavClose" class="mobile-nav-close">✕</button>
-        <a href="index.html" class="mobile-nav-link active">Home</a>
-        <a href="about.html" class="mobile-nav-link">About Us</a>
-        <a href="team.html" class="mobile-nav-link">Our Team</a>
-        <a href="text-editor.html" class="nav-link">Text Editor</a>
-        
-    </div>
-    
-    <div class="container">
-        <header class="header">
-            <h1 class="logo">SlimFile Inc.</h1>
-            <p class="tagline">Reduce file sizes smartly without quality loss</p>
-            
-            <!-- Desktop navigation -->
-            <nav class="navigation">
-                <a href="index.html" class="nav-link active">Home</a>
-                <a href="about.html" class="nav-link">About Us</a>
-                <a href="team.html" class="nav-link">Our Team</a>
-                <a href="text-editor.html" class="nav-link">Text Editor</a>
-                
-            </nav>
-            
-            <!-- Hamburger menu button -->
-            <div id="hamburgerMenu" class="hamburger-menu">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
-        </header>
-        
-        <!-- Hero section with gradient -->
-        <div class="hero">
-            <h2 class="hero-title">Compress Files in Your Browser</h2>
-            <p class="hero-text">Free, private, fast image and PDF compression with max file size 200mb</p>
-            <button id="heroUploadButton" class="btn btn-primary">Get Started</button>
-        </div>
-        
-        <!-- Welcome Animation -->
-        <div class="welcome-animation">
-            <div class="animation-text">Welcome to SlimFile!</div>
-            
-            <!-- File Character -->
-            <div class="file-character">
-                <div class="file-face">
-                    <div class="file-eye left"></div>
-                    <div class="file-eye right"></div>
-                    <div class="file-smile"></div>
-                </div>
-            </div>
-
-            <!-- Example Modal or Banner for iPhone Users -->
-<div id="installBanner" style="display: none;">
-  <p>To install SlimFile, tap the <strong>Share</strong> button in Safari and select <strong>Add to Home Screen</strong>.</p>
-  <button id="closeInstallBanner">Close</button>
-</div>   
-            <!-- Compression Machine -->
-            <div class="compress-machine">
-                <div class="machine-light"></div>
-                <div class="machine-screen">
-                    <div class="loading-bar">
-                        <div class="loading-progress"></div>
-                    </div>
-                </div>
-                <div class="machine-slot"></div>
-            </div>
-            
-            <!-- Small File (Compressed) -->
-            <div class="small-file">
-                <div class="small-face">
-                    <div class="small-eye left"></div>
-                    <div class="small-eye right"></div>
-                    <div class="small-smile"></div>
-                </div>
-            </div>
-            
-            <!-- Ground -->
-            <div class="ground"></div>
+    <header>
+        <!-- Hamburger menu button -->
+        <div id="hamburgerMenu" class="hamburger-menu">
+            <span></span>
+            <span></span>
+            <span></span>
         </div>
 
-        <main class="main-content">
-            <div class="grid">
-                <div class="main-area">
-                    <div class="card">
-                        <div class="card-header">
-                            <h2 class="card-title">Compress Your Files</h2>
-                            <p class="card-description">Reduce file size for images and PDFs without leaving your browser</p>
+        <!-- Mobile navigation (single instance) -->
+        <div id="mobileNav" class="mobile-nav">
+            <button id="mobileNavClose" class="mobile-nav-close">✕</button>
+            <a href="index.html" class="mobile-nav-link active">Home</a>
+            <a href="compressor.html" class="mobile-nav-link">Compress Files</a>
+            <a href="about.html" class="mobile-nav-link">About Us</a>
+            <a href="team.html" class="mobile-nav-link">Our Team</a>
+            <a href="text-editor.html" class="mobile-nav-link">Text Editor</a>
+        </div>
+        
+        <!-- Mobile menu overlay (single instance) -->
+        <div id="overlay" class="overlay"></div>
+        
+        <!-- Desktop navigation -->
+        <nav class="navigation">
+            <a href="index.html" class="nav-link active">Home</a>
+            <a href="compressor.html" class="nav-link">Compress Files</a>
+            <a href="about.html" class="nav-link">About Us</a>
+            <a href="team.html" class="nav-link">Our Team</a>
+            <a href="text-editor.html" class="nav-link">Text Editor</a>
+        </nav>
+        
+        
+    </header>
+
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-content">
+                <h1 class="hero-title">SlimFile Inc.</h1>
+                <h2 class="hero-tagline">Reduce file sizes smartly without quality loss</h2>
+                <p class="hero-description">Our advanced algorithms optimize your files while preserving their original quality. Experience faster uploads, downloads, and save storage space.</p>
+                <div class="hero-buttons">
+                    <a href="https://slim-file.vercel.app/index.html" class="btn btn-primary">Compress Files</a>
+                    <a href="https://slim-file.vercel.app/text-editor.html" class="btn btn-secondary">Text Editor</a>
+                </div>
+            </div>
+            <div class="hero-animation">
+                <img src="images/hero-animation.svg" alt="Hero Animation" style="width: 100%; height: 100%;">
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="features" id="features">
+            <div class="section-header">
+                <h2>Our Amazing Features</h2>
+                <p>Powerful tools designed for efficiency and simplicity</p>
+            </div>
+            <div class="features-container">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <img src="images/smart-compression.svg" alt="Smart Compression" style="width: 120px; height: 120px;">
+                    </div>
+                    <h3>Smart Compression</h3>
+                    <p>Reduce file sizes by up to 70% without losing quality</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <img src="images/text-editor.svg" alt="Advanced Text Editor" style="width: 120px; height: 120px;">
+                    </div>
+                    <h3>Advanced Text Editor</h3>
+                    <p>Edit and format text with powerful tools and features</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <img src="images/cloud-storage.svg" alt="Cloud Storage" style="width: 120px; height: 120px;">
+                    </div>
+                    <h3>Cloud Storage</h3>
+                    <p>Access your files from anywhere, anytime</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Carousel Section - File Compression -->
+        <section class="carousel-section">
+            <div class="section-header">
+                <h2>File Compression Tool</h2>
+                <p>Optimize your files with our advanced compression technology</p>
+            </div>
+            <div class="carousel-container">
+                <div class="carousel" id="compression-carousel">
+                    <div class="carousel-track">
+                        <div class="carousel-slide">
+                            <div class="slide-content">
+                                <div class="slide-image">
+                                    <img src="images/file-compression.svg" alt="File Compression" style="width: 100%; height: 250px;">
+                                </div>
+                                <div class="slide-info">
+                                    <h3>Image Compression</h3>
+                                    <p>Reduce image sizes without losing visual quality</p>
+                                    <a href="https://slim-file.vercel.app/index.html" class="btn btn-outline">Try Now</a>
+                                </div>
+                            </div>
                         </div>
-                        <div class="card-content">
-                            <div id="dropZone" class="drop-zone">
-                                <div class="drop-zone-content">
-                                    <div class="icon-container">
-                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                                            <polyline points="17 8 12 3 7 8" />
-                                            <line x1="12" y1="3" x2="12" y2="15" />
-                                        </svg>
-                                    </div>
-                                    <div>
-                                        <p class="drop-title">Drag & drop your file here</p>
-                                        <p class="drop-subtitle">or click to browse files</p>
-                                    </div>
-                                    <button id="uploadButton" class="btn btn-primary">Select File</button>
-                                    <input type="file" id="fileInput" accept="image/jpeg,image/png,image/webp,application/pdf" class="hidden-input" />
-                                    <p class="file-info">Supports JPEG, PNG, WebP, and PDF (max 200MB)</p>
+                        <div class="carousel-slide">
+                            <div class="slide-content">
+                                <div class="slide-image">
+                                    <img src="images/pdf-compression.svg" alt="PDF Compression" style="width: 100%; height: 250px;">
+                                </div>
+                                <div class="slide-info">
+                                    <h3>PDF Compression</h3>
+                                    <p>Optimize PDF files for email and web sharing</p>
+                                    <a href="https://slim-file.vercel.app/index.html" class="btn btn-outline">Try Now</a>
                                 </div>
                             </div>
-
-                            <div id="loader" class="loader-container" hidden>
-                                <div class="progress">
-                                    <div class="progress-bar"></div>
+                        </div>
+                        <div class="carousel-slide">
+                            <div class="slide-content">
+                                <div class="slide-image">
+                                    <img src="images/video-compression.svg" alt="Video Compression" style="width: 100%; height: 250px;">
                                 </div>
-                                <p class="progress-text">Compressing your file...</p>
-                            </div>
-
-                            <div id="errorMessage" class="error-message" hidden>
-                                <p class="error-title">Error</p>
-                                <p class="error-text"></p>
-                                <p class="error-tips">
-                                    Tips: Use original quality files, avoid pre-compressed content
-                                </p>
+                                <div class="slide-info">
+                                    <h3>Video Compression</h3>
+                                    <p>Shrink video files while maintaining clarity</p>
+                                    <a href="https://slim-file.vercel.app/index.html" class="btn btn-outline">Try Now</a>
+                                </div>
                             </div>
                         </div>
                     </div>
+                    <button class="carousel-button prev" data-carousel="compression-carousel">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <button class="carousel-button next" data-carousel="compression-carousel">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
 
-                    <div id="stats" class="card results-card" hidden>
-                        <div class="card-header">
-                            <h2 class="card-title">Compression Results <span id="fileTypeLabel" class="badge"></span></h2>
-                        </div>
-                        <div class="card-content">
-                            <div id="statsContent" class="stats-grid">
-                                <!-- Stats content will be inserted here -->
+        <!-- Carousel Section - Text Editor -->
+        <section class="carousel-section alt-bg">
+            <div class="section-header">
+                <h2>Text Editor Tool</h2>
+                <p>Edit, format, and transform your text with powerful features</p>
+            </div>
+            <div class="carousel-container">
+                <div class="carousel" id="editor-carousel">
+                    <div class="carousel-track">
+                        <div class="carousel-slide">
+                            <div class="slide-content">
+                                <div class="slide-image">
+                                    <img src="images/rich-text-editor.svg" alt="Rich Text Editor" style="width: 100%; height: 250px;">
+                                </div>
+                                <div class="slide-info">
+                                    <h3>Rich Text Formatting</h3>
+                                    <p>Format your text with a wide range of styling options</p>
+                                    <a href="https://slim-file.vercel.app/text-editor.html" class="btn btn-outline">Try Now</a>
+                                </div>
                             </div>
+                        </div>
+                        <div class="carousel-slide">
+                            <div class="slide-content">
+                                <div class="slide-image">
+                                    <img src="images/markdown-editor.svg" alt="Markdown Editor" style="width: 100%; height: 250px;">
+                                </div>
+                                <div class="slide-info">
+                                    <h3>Markdown Support</h3>
+                                    <p>Write in Markdown and preview the formatted output</p>
+                                    <a href="https://slim-file.vercel.app/text-editor.html" class="btn btn-outline">Try Now</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="carousel-slide">
+                            <div class="slide-content">
+                                <div class="slide-image">
+                                    <img src="images/collaborative-editing.svg" alt="Collaborative Editing" style="width: 100%; height: 250px;">
+                                </div>
+                                <div class="slide-info">
+                                    <h3>Collaborative Editing</h3>
+                                    <p>Work together with teammates in real-time</p>
+                                    <a href="https://slim-file.vercel.app/text-editor.html" class="btn btn-outline">Try Now</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="carousel-button prev" data-carousel="editor-carousel">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <button class="carousel-button next" data-carousel="editor-carousel">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
 
-                            <div class="preview-container">
-                                <img id="preview" class="file-preview" style="display: none;" />
-                                <iframe id="pdfPreview" class="file-preview" style="display: none;"></iframe>
-                            </div>
-                        </div>
-                        <div class="card-footer">
-                            <button id="downloadBtn" class="btn btn-primary btn-full">Download Compressed File</button>
-                        </div>
+        <!-- How It Works Section -->
+        <section class="how-it-works" id="about">
+            <div class="section-header">
+                <h2>How SlimFile Works</h2>
+                <p>Simple, efficient, and powerful</p>
+            </div>
+            <div class="steps-container">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h3>Upload Your Files</h3>
+                        <p>Simply drag and drop your files or choose from your device</p>
+                    </div>
+                    <div class="step-animation">
+                        <img src="images/upload-files.svg" alt="Upload Files" style="width: 150px; height: 150px;">
                     </div>
                 </div>
-
-                <div class="sidebar">
-                    <div class="card">
-                        <div class="card-header">
-                            <h2 class="card-title">How It Works</h2>
-                        </div>
-                        <div class="card-content">
-                            <div class="step">
-                                <div class="step-number">1</div>
-                                <div class="step-content">
-                                    <h3 class="step-title">Upload Your File</h3>
-                                    <p class="step-description">
-                                        Select or drag & drop an image or PDF file
-                                    </p>
-                                </div>
-                            </div>
-                            
-                            <div class="step">
-                                <div class="step-number">2</div>
-                                <div class="step-content">
-                                    <h3 class="step-title">Compression Happens</h3>
-                                    <p class="step-description">
-                                        Advanced algorithms reduce file size while preserving quality
-                                    </p>
-                                </div>
-                            </div>
-                            
-                            <div class="step">
-                                <div class="step-number">3</div>
-                                <div class="step-content">
-                                    <h3 class="step-title">Download Result</h3>
-                                    <p class="step-description">
-                                        Get your compressed file instantly
-                                    </p>
-                                </div>
-                            </div>
-                            
-                            <div class="separator"></div>
-                            
-                            <div class="features">
-                                <h3 class="features-title">Features</h3>
-                                <ul class="features-list">
-                                    <li class="feature-item">
-                                        <span class="check-icon">✓</span>
-                                        100% browser-based compression
-                                    </li>
-                                    <li class="feature-item">
-                                        <span class="check-icon">✓</span>
-                                        Your files never leave your device
-                                    </li>
-                                    <li class="feature-item">
-                                        <span class="check-icon">✓</span>
-                                        Fast processing - no waiting
-                                    </li>
-                                    <li class="feature-item">
-                                        <span class="check-icon">✓</span>
-                                        Supports multiple file formats
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h3>Choose Compression Level</h3>
+                        <p>Select the optimal balance between file size and quality</p>
                     </div>
-
-                    <div class="card">
-                        <div class="card-header">
-                            <h2 class="card-title">FAQ</h2>
-                        </div>
-                        <div class="card-content">
-                            <div class="faq-item">
-                                <h3 class="faq-question">Is it really free?</h3>
-                                <p class="faq-answer">
-                                    Yes, SlimFile is completely free with no limitations.
-                                </p>
-                            </div>
-                            
-                            <div class="faq-item">
-                                <h3 class="faq-question">Is my data secure?</h3>
-                                <p class="faq-answer">
-                                    All compression happens in your browser. Files are never uploaded to any server.
-                                </p>
-                            </div>
-                            
-                            <div class="faq-item">
-                                <h3 class="faq-question">What's the quality like?</h3>
-                                <p class="faq-answer">
-                                    We use smart algorithms to balance size reduction and visual quality.
-                                </p>
-                            </div>
-                        </div>
+                    <div class="step-animation">
+                        <img src="images/compression-level.svg" alt="Compression Level" style="width: 150px; height: 150px;">
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h3>Download Optimized Files</h3>
+                        <p>Get your compressed files instantly, ready to use</p>
+                    </div>
+                    <div class="step-animation">
+                        <img src="images/download-files.svg" alt="Download Files" style="width: 150px; height: 150px;">
                     </div>
                 </div>
             </div>
-        </main>
+        </section>
 
-        <footer class="footer">
-            <p>© <span id="currentYear"></span> SlimFile Inc. All rights reserved.</p>
-            <p>Secure browser-based file compression</p>
+        <!-- CTA Section -->
+        <section class="cta-section">
+            <div class="cta-content">
+                <h2>Ready to optimize your files?</h2>
+                <p>Start compressing files and editing text with our powerful tools today.</p>
+                <div class="cta-buttons">
+                    <a href="https://slim-file.vercel.app/index.html" class="btn btn-primary">Compress Now</a>
+                    <a href="https://slim-file.vercel.app/text-editor.html" class="btn btn-secondary">Edit Text</a>
+                </div>
+            </div>
+            <div class="cta-animation">
+                <div style="width: 100%; height: 300px; display: flex; justify-content: center; align-items: center;">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 200" width="300" height="200">
+                        <!-- Background -->
+                        <rect x="10" y="10" width="280" height="180" rx="20" ry="20" fill="none" stroke="white" stroke-width="2" stroke-dasharray="10 5" />
+                        
+                        <!-- Left Side: File Icon -->
+                        <g transform="translate(75, 100)">
+                            <animateTransform attributeName="transform" type="translate" values="75,100; 70,100; 75,100" dur="3s" repeatCount="indefinite" />
+                            <rect x="-30" y="-40" width="60" height="80" rx="5" ry="5" fill="#1a202c" stroke="#9f7aea" stroke-width="2" />
+                            <rect x="-20" y="-30" width="40" height="6" rx="2" ry="2" fill="white" opacity="0.7" />
+                            <rect x="-20" y="-15" width="40" height="6" rx="2" ry="2" fill="white" opacity="0.7" />
+                            <rect x="-20" y="0" width="40" height="6" rx="2" ry="2" fill="white" opacity="0.7" />
+                            <rect x="-20" y="15" width="25" height="6" rx="2" ry="2" fill="white" opacity="0.7" />
+                            <text x="0" y="-45" font-family="Arial" font-size="10" font-weight="bold" text-anchor="middle" fill="white">5MB</text>
+                        </g>
+                        
+                        <!-- Arrow -->
+                        <g>
+                            <animateTransform attributeName="transform" type="translate" values="0,0; 0,5; 0,0" dur="2s" repeatCount="indefinite" />
+                            <path d="M135,100 L165,100" stroke="white" stroke-width="3" />
+                            <path d="M155,90 L165,100 L155,110" stroke="white" stroke-width="3" fill="none" />
+                        </g>
+                        
+                        <!-- Right Side: Compressed File -->
+                        <g transform="translate(225, 100)">
+                            <animateTransform attributeName="transform" type="translate" values="225,100; 230,100; 225,100" dur="3s" repeatCount="indefinite" />
+                            <rect x="-20" y="-25" width="40" height="50" rx="5" ry="5" fill="#1a202c" stroke="#f06292" stroke-width="2" />
+                            <rect x="-12" y="-15" width="24" height="4" rx="1" ry="1" fill="white" opacity="0.7" />
+                            <rect x="-12" y="-5" width="24" height="4" rx="1" ry="1" fill="white" opacity="0.7" />
+                            <rect x="-12" y="5" width="24" height="4" rx="1" ry="1" fill="white" opacity="0.7" />
+                            <rect x="-12" y="15" width="15" height="4" rx="1" ry="1" fill="white" opacity="0.7" />
+                            <text x="0" y="-30" font-family="Arial" font-size="8" font-weight="bold" text-anchor="middle" fill="white">1MB</text>
+                        </g>
+                        
+                        <!-- Magic Sparkles -->
+                        <g>
+                            <circle cx="150" cy="70" r="5" fill="#9f7aea">
+                                <animate attributeName="opacity" values="0;1;0" dur="2s" repeatCount="indefinite" />
+                            </circle>
+                            <circle cx="185" cy="85" r="5" fill="#d264b6">
+                                <animate attributeName="opacity" values="0;1;0" dur="1.5s" repeatCount="indefinite" />
+                            </circle>
+                            <circle cx="115" cy="85" r="5" fill="#d264b6">
+                                <animate attributeName="opacity" values="0;1;0" dur="2.5s" repeatCount="indefinite" />
+                            </circle>
+                            <circle cx="150" cy="130" r="5" fill="#9f7aea">
+                                <animate attributeName="opacity" values="0;1;0" dur="3s" repeatCount="indefinite" />
+                            </circle>
+                        </g>
+                        
+                        <!-- Stars -->
+                        <path d="M40,40 L43,45 L48,46 L44,50 L45,55 L40,53 L35,55 L36,50 L32,46 L37,45 Z" fill="#f06292">
+                            <animateTransform attributeName="transform" type="rotate" from="0 40 40" to="360 40 40" dur="10s" repeatCount="indefinite" />
+                        </path>
+                        
+                        <path d="M260,40 L263,45 L268,46 L264,50 L265,55 L260,53 L255,55 L256,50 L252,46 L257,45 Z" fill="#9f7aea">
+                            <animateTransform attributeName="transform" type="rotate" from="0 260 40" to="-360 260 40" dur="12s" repeatCount="indefinite" />
+                        </path>
+                        
+                        <path d="M40,160 L43,165 L48,166 L44,170 L45,175 L40,173 L35,175 L36,170 L32,166 L37,165 Z" fill="#d264b6">
+                            <animateTransform attributeName="transform" type="rotate" from="0 40 160" to="-360 40 160" dur="8s" repeatCount="indefinite" />
+                        </path>
+                        
+                        <path d="M260,160 L263,165 L268,166 L264,170 L265,175 L260,173 L255,175 L256,170 L252,166 L257,165 Z" fill="#805ad5">
+                            <animateTransform attributeName="transform" type="rotate" from="0 260 160" to="360 260 160" dur="15s" repeatCount="indefinite" />
+                        </path>
+                    </svg>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer" id="contact">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <h2>SlimFile<span>Inc.</span></h2>
+                    <p>Reduce file sizes smartly without quality loss</p>
+                </div>
+                <div class="footer-links">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="#">Home</a></li>
+                        <li><a href="https://slim-file.vercel.app/index.html">File Compression</a></li>
+                        <li><a href="https://slim-file.vercel.app/text-editor.html">Text Editor</a></li>
+                        <li><a href="#about">About</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-contact">
+                    <h3>Contact Us</h3>
+                    <p><i class="fas fa-envelope"></i> contact@slimfile.com</p>
+                    <p><i class="fas fa-phone"></i> +1 (555) 123-4567</p>
+                    <div class="social-icons">
+                        <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2023 SlimFile Inc. All rights reserved.</p>
+            </div>
         </footer>
     </div>
-    <script src="compression.js"></script>
+
+    <!-- Scroll to Top Button -->
+    <button id="scroll-top" aria-label="Scroll to top">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <!-- JavaScript -->
     <script src="app.js"></script>
+    <script src="js/animations.js"></script>
+    <script src="js/main.js"></script>
 </body>
 </html>
