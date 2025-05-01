@@ -1,0 +1,133 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="150" height="150">
+  <!-- Background -->
+  <circle cx="100" cy="100" r="90" fill="none" stroke="#9f7aea" stroke-width="2" stroke-dasharray="8 4" opacity="0.7" />
+  
+  <!-- Slider Background -->
+  <rect x="40" y="100" width="120" height="20" rx="10" ry="10" fill="#1a202c" stroke="#805ad5" stroke-width="2" />
+  
+  <!-- Slider Line -->
+  <line x1="50" y1="110" x2="150" y2="110" stroke="white" stroke-width="2" stroke-linecap="round" stroke-dasharray="3 2" />
+  
+  <!-- Slider Markers -->
+  <circle cx="50" cy="110" r="3" fill="white" />
+  <circle cx="100" cy="110" r="3" fill="white" />
+  <circle cx="150" cy="110" r="3" fill="white" />
+  
+  <!-- Slider Handle -->
+  <g>
+    <animateTransform attributeName="transform" type="translate" values="0,0; 0,-3; 0,0" dur="2s" repeatCount="indefinite" />
+    <circle cx="100" cy="110" r="12" fill="#f06292" stroke="white" stroke-width="2" />
+  </g>
+  
+  <!-- Labels -->
+  <text x="50" y="130" font-family="Arial" font-size="8" font-weight="bold" text-anchor="middle" fill="white">Small</text>
+  <text x="100" y="130" font-family="Arial" font-size="8" font-weight="bold" text-anchor="middle" fill="white">Balanced</text>
+  <text x="150" y="130" font-family="Arial" font-size="8" font-weight="bold" text-anchor="middle" fill="white">High Quality</text>
+  
+  <!-- File Transformation Animation -->
+  <!-- Large Original File -->
+  <g transform="translate(60, 60)">
+    <animateTransform attributeName="transform" type="translate" values="60,60; 60,55; 60,60" dur="3s" repeatCount="indefinite" />
+    <rect x="-20" y="-25" width="40" height="50" rx="3" ry="3" fill="#1a202c" stroke="#9f7aea" stroke-width="2" />
+    <path d="M20,-25 L20,-35 L10,-25" fill="#1a202c" stroke="#9f7aea" stroke-width="2" />
+    
+    <!-- File Face -->
+    <circle cx="-7" cy="-15" r="4" fill="white" />
+    <circle cx="7" cy="-15" r="4" fill="white" />
+    <circle cx="-7" cy="-15" r="2" fill="#1a202c">
+      <animate attributeName="cy" values="-15;-14;-15" dur="1s" repeatCount="indefinite" />
+    </circle>
+    <circle cx="7" cy="-15" r="2" fill="#1a202c">
+      <animate attributeName="cy" values="-15;-14;-15" dur="1s" repeatCount="indefinite" />
+    </circle>
+    <path d="M-7,0 Q0,7 7,0" stroke="white" stroke-width="1.5" fill="none">
+      <animate attributeName="d" values="M-7,0 Q0,7 7,0; M-7,2 Q0,9 7,2; M-7,0 Q0,7 7,0" dur="3s" repeatCount="indefinite" />
+    </path>
+    
+    <!-- File Content Lines -->
+    <rect x="-12" y="-5" width="24" height="2" rx="1" ry="1" fill="white" opacity="0.7" />
+    <rect x="-12" y="0" width="18" height="2" rx="1" ry="1" fill="white" opacity="0.7" />
+    <rect x="-12" y="5" width="24" height="2" rx="1" ry="1" fill="white" opacity="0.7" />
+    <rect x="-12" y="10" width="15" height="2" rx="1" ry="1" fill="white" opacity="0.7" />
+    
+    <!-- Size Indicator -->
+    <circle cx="15" cy="-20" r="8" fill="#ff0000" opacity="0.7" />
+    <text x="15" y="-17" font-family="Arial" font-size="6" font-weight="bold" text-anchor="middle" fill="white">10MB</text>
+  </g>
+  
+  <!-- Middle Medium File -->
+  <g transform="translate(100, 60)">
+    <animateTransform attributeName="transform" type="translate" values="100,60; 100,55; 100,60" dur="2.5s" repeatCount="indefinite" />
+    <rect x="-15" y="-20" width="30" height="40" rx="3" ry="3" fill="#1a202c" stroke="#d264b6" stroke-width="2" />
+    <path d="M15,-20 L15,-28 L7,-20" fill="#1a202c" stroke="#d264b6" stroke-width="2" />
+    
+    <!-- File Face -->
+    <circle cx="-5" cy="-10" r="3" fill="white" />
+    <circle cx="5" cy="-10" r="3" fill="white" />
+    <circle cx="-5" cy="-10" r="1.5" fill="#1a202c">
+      <animate attributeName="cy" values="-10;-9;-10" dur="1s" repeatCount="indefinite" />
+    </circle>
+    <circle cx="5" cy="-10" r="1.5" fill="#1a202c">
+      <animate attributeName="cy" values="-10;-9;-10" dur="1s" repeatCount="indefinite" />
+    </circle>
+    <path d="M-5,0 Q0,5 5,0" stroke="white" stroke-width="1.5" fill="none">
+      <animate attributeName="d" values="M-5,0 Q0,5 5,0; M-5,1 Q0,6 5,1; M-5,0 Q0,5 5,0" dur="3s" repeatCount="indefinite" />
+    </path>
+    
+    <!-- File Content Lines -->
+    <rect x="-10" y="-4" width="20" height="1.5" rx="0.75" ry="0.75" fill="white" opacity="0.7" />
+    <rect x="-10" y="0" width="15" height="1.5" rx="0.75" ry="0.75" fill="white" opacity="0.7" />
+    <rect x="-10" y="4" width="20" height="1.5" rx="0.75" ry="0.75" fill="white" opacity="0.7" />
+    <rect x="-10" y="8" width="12" height="1.5" rx="0.75" ry="0.75" fill="white" opacity="0.7" />
+    
+    <!-- Size Indicator -->
+    <circle cx="10" cy="-15" r="6" fill="#ff9900" opacity="0.7" />
+    <text x="10" y="-13" font-family="Arial" font-size="5" font-weight="bold" text-anchor="middle" fill="white">5MB</text>
+  </g>
+  
+  <!-- Small Compressed File -->
+  <g transform="translate(140, 60)">
+    <animateTransform attributeName="transform" type="translate" values="140,60; 140,55; 140,60" dur="2s" repeatCount="indefinite" />
+    <rect x="-12" y="-15" width="24" height="30" rx="3" ry="3" fill="#1a202c" stroke="#f06292" stroke-width="2" />
+    <path d="M12,-15 L12,-22 L5,-15" fill="#1a202c" stroke="#f06292" stroke-width="2" />
+    
+    <!-- File Face -->
+    <circle cx="-4" cy="-8" r="2.5" fill="white" />
+    <circle cx="4" cy="-8" r="2.5" fill="white" />
+    <circle cx="-4" cy="-8" r="1.2" fill="#1a202c">
+      <animate attributeName="cy" values="-8;-7;-8" dur="1s" repeatCount="indefinite" />
+    </circle>
+    <circle cx="4" cy="-8" r="1.2" fill="#1a202c">
+      <animate attributeName="cy" values="-8;-7;-8" dur="1s" repeatCount="indefinite" />
+    </circle>
+    <path d="M-4,0 Q0,4 4,0" stroke="white" stroke-width="1.2" fill="none">
+      <animate attributeName="d" values="M-4,0 Q0,4 4,0; M-4,1 Q0,5 4,1; M-4,0 Q0,4 4,0" dur="3s" repeatCount="indefinite" />
+    </path>
+    
+    <!-- File Content Lines -->
+    <rect x="-8" y="-3" width="16" height="1" rx="0.5" ry="0.5" fill="white" opacity="0.7" />
+    <rect x="-8" y="0" width="12" height="1" rx="0.5" ry="0.5" fill="white" opacity="0.7" />
+    <rect x="-8" y="3" width="16" height="1" rx="0.5" ry="0.5" fill="white" opacity="0.7" />
+    <rect x="-8" y="6" width="10" height="1" rx="0.5" ry="0.5" fill="white" opacity="0.7" />
+    
+    <!-- Size Indicator -->
+    <circle cx="8" cy="-12" r="5" fill="#00cc00" opacity="0.7" />
+    <text x="8" y="-10" font-family="Arial" font-size="4" font-weight="bold" text-anchor="middle" fill="white">1MB</text>
+  </g>
+  
+  <!-- Arrows Connecting Files -->
+  <g>
+    <line x1="70" y1="60" x2="90" y2="60" stroke="#805ad5" stroke-width="2" stroke-linecap="round" stroke-dasharray="3 2">
+      <animate attributeName="stroke-dashoffset" from="5" to="0" dur="1s" repeatCount="indefinite" />
+    </line>
+    <path d="M85,55 L90,60 L85,65" stroke="#805ad5" stroke-width="2" stroke-linecap="round" fill="none" />
+    
+    <line x1="110" y1="60" x2="130" y2="60" stroke="#805ad5" stroke-width="2" stroke-linecap="round" stroke-dasharray="3 2">
+      <animate attributeName="stroke-dashoffset" from="5" to="0" dur="1s" repeatCount="indefinite" />
+    </line>
+    <path d="M125,55 L130,60 L125,65" stroke="#805ad5" stroke-width="2" stroke-linecap="round" fill="none" />
+  </g>
+  
+  <!-- Title -->
+  <text x="100" y="180" font-family="Arial" font-size="10" font-weight="bold" text-anchor="middle" fill="white">Select Compression Level</text>
+</svg>

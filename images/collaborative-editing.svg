@@ -1,0 +1,93 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" width="240" height="240">
+  <!-- Background -->
+  <circle cx="120" cy="120" r="110" fill="none" stroke="#9f7aea" stroke-width="2" stroke-dasharray="3 3" />
+  
+  <!-- Center Document -->
+  <rect x="95" y="95" width="50" height="70" rx="5" ry="5" fill="#1a202c" stroke="#d264b6" stroke-width="2" />
+  <rect x="100" y="105" width="40" height="5" rx="1" ry="1" fill="white" opacity="0.7" />
+  <rect x="100" y="115" width="40" height="5" rx="1" ry="1" fill="white" opacity="0.7" />
+  <rect x="100" y="125" width="30" height="5" rx="1" ry="1" fill="white" opacity="0.7" />
+  <rect x="100" y="135" width="40" height="5" rx="1" ry="1" fill="white" opacity="0.7" />
+  <rect x="100" y="145" width="25" height="5" rx="1" ry="1" fill="white" opacity="0.7" />
+  <rect x="100" y="155" width="35" height="5" rx="1" ry="1" fill="white" opacity="0.7" />
+  
+  <!-- User Icons -->
+  <g>
+    <animateTransform attributeName="transform" type="rotate" from="0 120 120" to="360 120 120" dur="30s" repeatCount="indefinite" />
+    <!-- User 1 -->
+    <g transform="translate(120, 40)">
+      <circle cx="0" cy="0" r="15" fill="#805ad5" />
+      <circle cx="0" cy="-5" r="5" fill="#1a202c" />
+      <path d="M-7,0 Q0,10 7,0" stroke="#1a202c" stroke-width="2" fill="none" />
+      
+      <!-- Connection Line -->
+      <line x1="0" y1="15" x2="0" y2="55" stroke="#805ad5" stroke-width="2" stroke-dasharray="2 1" />
+    </g>
+    
+    <!-- User 2 -->
+    <g transform="translate(200, 120)">
+      <circle cx="0" cy="0" r="15" fill="#d264b6" />
+      <circle cx="0" cy="-5" r="5" fill="#1a202c" />
+      <path d="M-7,0 Q0,10 7,0" stroke="#1a202c" stroke-width="2" fill="none" />
+      
+      <!-- Connection Line -->
+      <line x1="-15" y1="0" x2="-55" y2="0" stroke="#d264b6" stroke-width="2" stroke-dasharray="2 1" />
+    </g>
+    
+    <!-- User 3 -->
+    <g transform="translate(120, 200)">
+      <circle cx="0" cy="0" r="15" fill="#f06292" />
+      <circle cx="0" cy="-5" r="5" fill="#1a202c" />
+      <path d="M-7,0 Q0,10 7,0" stroke="#1a202c" stroke-width="2" fill="none" />
+      
+      <!-- Connection Line -->
+      <line x1="0" y1="-15" x2="0" y2="-55" stroke="#f06292" stroke-width="2" stroke-dasharray="2 1" />
+    </g>
+    
+    <!-- User 4 -->
+    <g transform="translate(40, 120)">
+      <circle cx="0" cy="0" r="15" fill="#9f7aea" />
+      <circle cx="0" cy="-5" r="5" fill="#1a202c" />
+      <path d="M-7,0 Q0,10 7,0" stroke="#1a202c" stroke-width="2" fill="none" />
+      
+      <!-- Connection Line -->
+      <line x1="15" y1="0" x2="55" y2="0" stroke="#9f7aea" stroke-width="2" stroke-dasharray="2 1" />
+    </g>
+  </g>
+  
+  <!-- Cursors -->
+  <g transform="translate(131, 105)">
+    <animateTransform attributeName="transform" type="translate" values="131,105; 131,115; 131,125; 131,135; 131,145; 131,105" dur="8s" repeatCount="indefinite" />
+    <path d="M0,0 L5,8 L0,6 L-5,8 Z" fill="#805ad5" />
+  </g>
+  
+  <g transform="translate(110, 145)">
+    <animateTransform attributeName="transform" type="translate" values="110,145; 110,155; 110,105; 110,115; 110,145" dur="10s" repeatCount="indefinite" />
+    <path d="M0,0 L5,8 L0,6 L-5,8 Z" fill="#f06292" />
+  </g>
+  
+  <!-- Connection Animation Elements -->
+  <circle cx="160" cy="80" r="3" fill="#d264b6">
+    <animate attributeName="cx" values="120;160;120" dur="3s" repeatCount="indefinite" />
+    <animate attributeName="cy" values="120;80;120" dur="3s" repeatCount="indefinite" />
+    <animate attributeName="opacity" values="0;1;0" dur="3s" repeatCount="indefinite" />
+  </circle>
+  
+  <circle cx="80" cy="160" r="3" fill="#9f7aea">
+    <animate attributeName="cx" values="120;80;120" dur="4s" repeatCount="indefinite" />
+    <animate attributeName="cy" values="120;160;120" dur="4s" repeatCount="indefinite" />
+    <animate attributeName="opacity" values="0;1;0" dur="4s" repeatCount="indefinite" />
+  </circle>
+  
+  <circle cx="160" cy="160" r="3" fill="#f06292">
+    <animate attributeName="cx" values="120;160;120" dur="2.5s" repeatCount="indefinite" />
+    <animate attributeName="cy" values="120;160;120" dur="2.5s" repeatCount="indefinite" />
+    <animate attributeName="opacity" values="0;1;0" dur="2.5s" repeatCount="indefinite" />
+  </circle>
+  
+  <circle cx="80" cy="80" r="3" fill="#805ad5">
+    <animate attributeName="cx" values="120;80;120" dur="3.5s" repeatCount="indefinite" />
+    <animate attributeName="cy" values="120;80;120" dur="3.5s" repeatCount="indefinite" />
+    <animate attributeName="opacity" values="0;1;0" dur="3.5s" repeatCount="indefinite" />
+  </circle>
+</svg>

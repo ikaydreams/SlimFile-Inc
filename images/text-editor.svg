@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" width="120" height="120">
+  <!-- Background -->
+  <rect x="40" y="40" width="160" height="160" rx="10" ry="10" fill="none" stroke="#9f7aea" stroke-width="2" stroke-dasharray="5 3" />
+  
+  <!-- Editor Window -->
+  <rect x="60" y="60" width="120" height="120" rx="5" ry="5" fill="#1a202c" stroke="#d264b6" stroke-width="2" />
+  
+  <!-- Toolbar -->
+  <rect x="60" y="60" width="120" height="20" rx="5" ry="5" fill="#805ad5" />
+  
+  <!-- Toolbar Buttons -->
+  <circle cx="70" cy="70" r="5" fill="#f06292" />
+  <circle cx="85" cy="70" r="5" fill="#f06292" />
+  <circle cx="100" cy="70" r="5" fill="#f06292" />
+  <rect x="115" cy="70" width="10" height="6" rx="2" ry="2" fill="#9f7aea" y="67" />
+  <rect x="130" cy="70" width="10" height="6" rx="2" ry="2" fill="#9f7aea" y="67" />
+  <rect x="145" cy="70" width="10" height="6" rx="2" ry="2" fill="#9f7aea" y="67" />
+  
+  <!-- Text Content -->
+  <g>
+    <animateTransform attributeName="transform" type="translate" values="0,0; 0,2; 0,0" dur="3s" repeatCount="indefinite" />
+    <rect x="70" y="90" width="100" height="6" rx="2" ry="2" fill="#d264b6" opacity="0.8" />
+    <rect x="70" y="102" width="80" height="6" rx="2" ry="2" fill="white" opacity="0.7" />
+    <rect x="70" y="114" width="100" height="6" rx="2" ry="2" fill="white" opacity="0.7" />
+    <rect x="70" y="126" width="60" height="6" rx="2" ry="2" fill="white" opacity="0.7" />
+    <rect x="70" y="138" width="90" height="6" rx="2" ry="2" fill="white" opacity="0.7" />
+    <rect x="70" y="150" width="75" height="6" rx="2" ry="2" fill="white" opacity="0.7" />
+    <rect x="70" y="162" width="100" height="6" rx="2" ry="2" fill="white" opacity="0.7" />
+  </g>
+  
+  <!-- Cursor -->
+  <rect x="150" y="90" width="2" height="6" fill="#f06292">
+    <animate attributeName="opacity" values="1;0;1" dur="1s" repeatCount="indefinite" />
+  </rect>
+  
+  <!-- Formatting Animation -->
+  <g>
+    <animateTransform attributeName="transform" type="translate" values="0,0; 5,0; 0,0" dur="4s" repeatCount="indefinite" />
+    <circle cx="190" cy="90" r="8" fill="#9f7aea" opacity="0.7" />
+    <circle cx="190" cy="110" r="8" fill="#d264b6" opacity="0.7" />
+    <circle cx="190" cy="130" r="8" fill="#f06292" opacity="0.7" />
+    <circle cx="190" cy="150" r="8" fill="#805ad5" opacity="0.7" />
+  </g>
+  
+  <!-- Floating Particles -->
+  <g>
+    <circle cx="40" cy="40" r="3" fill="#f06292">
+      <animate attributeName="opacity" values="0;1;0" dur="2s" repeatCount="indefinite" />
+    </circle>
+    <circle cx="200" cy="40" r="3" fill="#f06292">
+      <animate attributeName="opacity" values="0;1;0" dur="1.5s" repeatCount="indefinite" />
+    </circle>
+    <circle cx="40" cy="200" r="3" fill="#f06292">
+      <animate attributeName="opacity" values="0;1;0" dur="2.5s" repeatCount="indefinite" />
+    </circle>
+    <circle cx="200" cy="200" r="3" fill="#f06292">
+      <animate attributeName="opacity" values="0;1;0" dur="1.8s" repeatCount="indefinite" />
+    </circle>
+  </g>
+  
+  <!-- Stars -->
+  <path d="M30,30 L33,38 L42,39 L36,45 L38,54 L30,50 L22,54 L24,45 L18,39 L27,38 Z" fill="#f06292">
+    <animateTransform attributeName="transform" type="rotate" from="0 30 30" to="360 30 30" dur="10s" repeatCount="indefinite" />
+  </path>
+  
+  <path d="M210,30 L213,38 L222,39 L216,45 L218,54 L210,50 L202,54 L204,45 L198,39 L207,38 Z" fill="#9f7aea">
+    <animateTransform attributeName="transform" type="rotate" from="0 210 30" to="-360 210 30" dur="15s" repeatCount="indefinite" />
+  </path>
+  
+  <path d="M30,210 L33,218 L42,219 L36,225 L38,234 L30,230 L22,234 L24,225 L18,219 L27,218 Z" fill="#d264b6">
+    <animateTransform attributeName="transform" type="rotate" from="0 30 210" to="-360 30 210" dur="12s" repeatCount="indefinite" />
+  </path>
+  
+  <path d="M210,210 L213,218 L222,219 L216,225 L218,234 L210,230 L202,234 L204,225 L198,219 L207,218 Z" fill="#805ad5">
+    <animateTransform attributeName="transform" type="rotate" from="0 210 210" to="360 210 210" dur="8s" repeatCount="indefinite" />
+  </path>
+</svg>

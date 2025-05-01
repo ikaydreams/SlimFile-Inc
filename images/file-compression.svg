@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" width="240" height="240">
+  <!-- Background -->
+  <rect x="20" y="20" width="200" height="200" rx="15" ry="15" fill="none" stroke="#9f7aea" stroke-width="2" />
+  
+  <!-- Image Frame -->
+  <rect x="50" y="50" width="140" height="100" rx="5" ry="5" fill="#1a202c" stroke="#d264b6" stroke-width="2" />
+  
+  <!-- Stylized Image -->
+  <circle cx="85" cy="80" r="15" fill="#9f7aea" />
+  <rect x="115" y="70" width="50" height="20" rx="3" ry="3" fill="#805ad5" />
+  <rect x="70" y="105" width="100" height="30" rx="3" ry="3" fill="#f06292" />
+  
+  <!-- Compression Effect -->
+  <g>
+    <animateTransform attributeName="transform" type="translate" values="0,0; 0,5; 0,0" dur="3s" repeatCount="indefinite" />
+    <path d="M90,170 L120,185 L150,170 L120,155 Z" fill="#805ad5" fill-opacity="0.7" />
+    <text x="120" y="173" font-family="Arial" font-size="10" font-weight="bold" text-anchor="middle" fill="white">COMPRESS</text>
+  </g>
+  
+  <!-- Size Indicator (Before) -->
+  <g transform="translate(50, 170)">
+    <rect x="-10" y="-10" width="20" height="20" rx="3" ry="3" fill="#ff0000" opacity="0.7" />
+    <text x="0" y="3" font-family="Arial" font-size="8" font-weight="bold" text-anchor="middle" fill="white">4MB</text>
+  </g>
+  
+  <!-- Size Indicator (After) -->
+  <g transform="translate(190, 170)">
+    <rect x="-8" y="-8" width="16" height="16" rx="3" ry="3" fill="#00cc00" opacity="0.7" />
+    <text x="0" y="2" font-family="Arial" font-size="6" font-weight="bold" text-anchor="middle" fill="white">1MB</text>
+  </g>
+  
+  <!-- Arrows showing size reduction -->
+  <path d="M65,170 L80,170" stroke="#f06292" stroke-width="2" stroke-linecap="round" />
+  <path d="M73,165 L80,170 L73,175" stroke="#f06292" stroke-width="2" fill="none" stroke-linecap="round" />
+  
+  <path d="M160,170 L175,170" stroke="#f06292" stroke-width="2" stroke-linecap="round" />
+  <path d="M168,165 L175,170 L168,175" stroke="#f06292" stroke-width="2" fill="none" stroke-linecap="round" />
+  
+  <!-- Image Quality Indicators -->
+  <g transform="translate(70, 40)">
+    <text x="0" y="0" font-family="Arial" font-size="8" font-weight="bold" text-anchor="middle" fill="white">Original</text>
+  </g>
+  
+  <g transform="translate(170, 40)">
+    <text x="0" y="0" font-family="Arial" font-size="8" font-weight="bold" text-anchor="middle" fill="white">Compressed</text>
+  </g>
+  
+  <!-- Animated Elements -->
+  <g>
+    <circle cx="40" cy="40" r="3" fill="#f06292">
+      <animate attributeName="opacity" values="0;1;0" dur="2s" repeatCount="indefinite" />
+    </circle>
+    <circle cx="200" cy="40" r="3" fill="#f06292">
+      <animate attributeName="opacity" values="0;1;0" dur="1.5s" repeatCount="indefinite" />
+    </circle>
+    <circle cx="40" cy="200" r="3" fill="#f06292">
+      <animate attributeName="opacity" values="0;1;0" dur="2.5s" repeatCount="indefinite" />
+    </circle>
+    <circle cx="200" cy="200" r="3" fill="#f06292">
+      <animate attributeName="opacity" values="0;1;0" dur="1.8s" repeatCount="indefinite" />
+    </circle>
+  </g>
+  
+  <!-- Stars -->
+  <path d="M30,30 L33,38 L42,39 L36,45 L38,54 L30,50 L22,54 L24,45 L18,39 L27,38 Z" fill="#f06292">
+    <animateTransform attributeName="transform" type="rotate" from="0 30 30" to="360 30 30" dur="10s" repeatCount="indefinite" />
+  </path>
+  
+  <path d="M210,30 L213,38 L222,39 L216,45 L218,54 L210,50 L202,54 L204,45 L198,39 L207,38 Z" fill="#9f7aea">
+    <animateTransform attributeName="transform" type="rotate" from="0 210 30" to="-360 210 30" dur="12s" repeatCount="indefinite" />
+  </path>
+</svg>

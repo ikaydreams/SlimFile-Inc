@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" width="240" height="240">
+  <!-- Background -->
+  <rect x="30" y="30" width="180" height="180" rx="10" ry="10" fill="none" stroke="#9f7aea" stroke-width="2" stroke-linecap="round" stroke-dasharray="5 3" />
+  
+  <!-- Text Editor Box -->
+  <rect x="50" y="50" width="140" height="140" rx="5" ry="5" fill="#1a202c" stroke="#d264b6" stroke-width="2" />
+  
+  <!-- Toolbar -->
+  <rect x="50" y="50" width="140" height="25" rx="5" ry="5" fill="#805ad5" />
+  
+  <!-- Toolbar Buttons -->
+  <circle cx="65" cy="62" r="6" fill="#f06292" />
+  <circle cx="85" cy="62" r="6" fill="#f06292" />
+  <circle cx="105" cy="62" r="6" fill="#f06292" />
+  <rect x="120" y="58" width="12" height="8" rx="2" ry="2" fill="#9f7aea" />
+  <rect x="140" y="58" width="12" height="8" rx="2" ry="2" fill="#9f7aea" />
+  <rect x="160" y="58" width="12" height="8" rx="2" ry="2" fill="#9f7aea" />
+  
+  <!-- Text Content -->
+  <g>
+    <rect x="60" y="85" width="120" height="8" rx="2" ry="2" fill="#d264b6" opacity="0.8" />
+    <rect x="60" y="100" width="100" height="8" rx="2" ry="2" fill="white" opacity="0.7" />
+    <rect x="60" y="115" width="120" height="8" rx="2" ry="2" fill="white" opacity="0.7" />
+    <rect x="60" y="130" width="80" height="8" rx="2" ry="2" fill="white" opacity="0.7" />
+    <rect x="60" y="145" width="110" height="8" rx="2" ry="2" fill="white" opacity="0.7" />
+    <rect x="60" y="160" width="90" height="8" rx="2" ry="2" fill="white" opacity="0.7" />
+  </g>
+  
+  <!-- Cursor -->
+  <rect x="161" y="85" width="2" height="8" fill="#f06292">
+    <animate attributeName="opacity" values="1;0;1" dur="1s" repeatCount="indefinite" />
+  </rect>
+  
+  <!-- Text Formatting Animation -->
+  <g>
+    <animateTransform attributeName="transform" type="translate" values="0 0; 3 0; 0 0" dur="3s" repeatCount="indefinite" />
+    <rect x="190" y="85" width="10" height="10" rx="5" ry="5" fill="#9f7aea" opacity="0.7" />
+    <rect x="190" y="100" width="10" height="10" rx="5" ry="5" fill="#d264b6" opacity="0.7" />
+    <rect x="190" y="115" width="10" height="10" rx="5" ry="5" fill="#f06292" opacity="0.7" />
+  </g>
+  
+  <!-- Decorative Elements -->
+  <path d="M30,120 Q35,100 50,110 T70,90" stroke="#9f7aea" stroke-width="2" fill="none">
+    <animate attributeName="d" values="M30,120 Q35,100 50,110 T70,90; M30,120 Q40,105 50,100 T70,90; M30,120 Q35,100 50,110 T70,90" dur="5s" repeatCount="indefinite" />
+  </path>
+  
+  <path d="M210,120 Q205,140 190,130 T170,150" stroke="#f06292" stroke-width="2" fill="none">
+    <animate attributeName="d" values="M210,120 Q205,140 190,130 T170,150; M210,120 Q200,135 190,140 T170,150; M210,120 Q205,140 190,130 T170,150" dur="4s" repeatCount="indefinite" />
+  </path>
+  
+  <!-- Stars -->
+  <path d="M40,40 L43,47 L51,48 L45,53 L47,61 L40,57 L33,61 L35,53 L29,48 L37,47 Z" fill="#f06292">
+    <animateTransform attributeName="transform" type="rotate" from="0 40 40" to="360 40 40" dur="7s" repeatCount="indefinite" />
+  </path>
+  
+  <path d="M200,200 L203,207 L211,208 L205,213 L207,221 L200,217 L193,221 L195,213 L189,208 L197,207 Z" fill="#f06292">
+    <animateTransform attributeName="transform" type="rotate" from="0 200 200" to="-360 200 200" dur="9s" repeatCount="indefinite" />
+  </path>
+</svg>
