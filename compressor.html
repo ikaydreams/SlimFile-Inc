@@ -1,0 +1,348 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SlimFile - Reduce file sizes smartly without quality loss</title>
+    <meta name="title" content="SlimFile - Fast & Easy File Compression Tool">
+<meta name="description" content="SlimFile is a powerful file compression tool that reduces the size of PDFs and images while preserving quality. No installation required.">
+    <meta name="robots" content="index, follow">
+<meta name="language" content="en">
+<meta name="author" content="Isaac Abakah, Founder and CEO of SlimFile Inc.">
+    <link rel="icon" href="circle.png" type="image/png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="manifest" href="/manifest.json">
+    <script src="/pwa.js"></script>
+
+    <button id="installBtn" style="display: none;">Install SlimFile</button>
+    
+    <!-- PDF.js and PDF-Lib for PDF compression -->
+    <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.4.120/build/pdf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "SlimFile",
+  "url": "https://slim-file.vercel.app/",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": "https://slim-file.vercel.app/search?q={search_term_string}",
+    "query-input": "required name=search_term_string"
+  }
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "name": "SlimFile - File Compression Tool",
+  "url": "https://slim-file.vercel.app/"
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "name": "About SlimFile",
+  "url": "https://slim-file.vercel.app/about.html"
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "name": "SlimFile Team",
+  "url": "https://slim-file.vercel.app/team.html"
+}
+</script>
+
+    <script>
+        /* Initialize PDF.js worker */
+        window.pdfjsLib = window.pdfjsLib || {};
+        window.pdfjsLib.GlobalWorkerOptions = window.pdfjsLib.GlobalWorkerOptions || {};
+        window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.4.120/build/pdf.worker.min.js';
+    </script>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="animation.css">
+    <link rel="canonical" href="https://www.slim-file.vercel.app/"/>
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-QWYM1ML0X8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-QWYM1ML0X8');
+</script>
+
+    <script>
+  window.addEventListener('appinstalled', () => {
+    console.log('SlimFile installed!');
+    gtag('event', 'pwa_install', {
+      event_category: 'PWA',
+      event_label: 'SlimFile Web App',
+      value: 1
+    });
+  });
+</script>
+    
+</head>
+<body>
+    <!-- Mobile menu overlay -->
+    <div id="overlay" class="overlay"></div>
+    
+    <!-- Mobile navigation -->
+    <div id="mobileNav" class="mobile-nav">
+        <button id="mobileNavClose" class="mobile-nav-close">✕</button>
+        <a href="index.html" class="mobile-nav-link">Home</a>
+        <a href="compressor.html" class="mobile-nav-link active">Compress Files</a>
+        <a href="about.html" class="mobile-nav-link">About Us</a>
+        <a href="team.html" class="mobile-nav-link">Our Team</a>
+        <a href="text-editor.html" class="nav-link">Text Editor</a>
+        
+    </div>
+    
+    <div class="container">
+        <header class="header">
+            <h1 class="logo">SlimFile Inc.</h1>
+            <p class="tagline">Reduce file sizes smartly without quality loss</p>
+            
+            <!-- Desktop navigation -->
+            <nav class="navigation">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="compressor.html" class="mobile-nav-link active">Compress Files</a>
+                <a href="about.html" class="nav-link">About Us</a>
+                <a href="team.html" class="nav-link">Our Team</a>
+                <a href="text-editor.html" class="nav-link">Text Editor</a>
+                
+            </nav>
+            
+            <!-- Hamburger menu button -->
+            <div id="hamburgerMenu" class="hamburger-menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </header>
+        
+        <!-- Hero section with gradient -->
+        <div class="hero">
+            <h2 class="hero-title">Compress Files in Your Browser</h2>
+            <p class="hero-text">Free, private, fast image and PDF compression with max file size 200mb</p>
+            <button id="heroUploadButton" class="btn btn-primary">Get Started</button>
+        </div>
+        
+        <!-- Welcome Animation -->
+        <div class="welcome-animation">
+            <div class="animation-text">Welcome to SlimFile!</div>
+            
+            <!-- File Character -->
+            <div class="file-character">
+                <div class="file-face">
+                    <div class="file-eye left"></div>
+                    <div class="file-eye right"></div>
+                    <div class="file-smile"></div>
+                </div>
+            </div>
+
+            <!-- Example Modal or Banner for iPhone Users -->
+<div id="installBanner" style="display: none;">
+  <p>To install SlimFile, tap the <strong>Share</strong> button in Safari and select <strong>Add to Home Screen</strong>.</p>
+  <button id="closeInstallBanner">Close</button>
+</div>   
+            <!-- Compression Machine -->
+            <div class="compress-machine">
+                <div class="machine-light"></div>
+                <div class="machine-screen">
+                    <div class="loading-bar">
+                        <div class="loading-progress"></div>
+                    </div>
+                </div>
+                <div class="machine-slot"></div>
+            </div>
+            
+            <!-- Small File (Compressed) -->
+            <div class="small-file">
+                <div class="small-face">
+                    <div class="small-eye left"></div>
+                    <div class="small-eye right"></div>
+                    <div class="small-smile"></div>
+                </div>
+            </div>
+            
+            <!-- Ground -->
+            <div class="ground"></div>
+        </div>
+
+        <main class="main-content">
+            <div class="grid">
+                <div class="main-area">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title">Compress Your Files</h2>
+                            <p class="card-description">Reduce file size for images and PDFs without leaving your browser</p>
+                        </div>
+                        <div class="card-content">
+                            <div id="dropZone" class="drop-zone">
+                                <div class="drop-zone-content">
+                                    <div class="icon-container">
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                            <polyline points="17 8 12 3 7 8" />
+                                            <line x1="12" y1="3" x2="12" y2="15" />
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <p class="drop-title">Drag & drop your file here</p>
+                                        <p class="drop-subtitle">or click to browse files</p>
+                                    </div>
+                                    <button id="uploadButton" class="btn btn-primary">Select File</button>
+                                    <input type="file" id="fileInput" accept="image/jpeg,image/png,image/webp,application/pdf" class="hidden-input" />
+                                    <p class="file-info">Supports JPEG, PNG, WebP, and PDF (max 200MB)</p>
+                                </div>
+                            </div>
+
+                            <div id="loader" class="loader-container" hidden>
+                                <div class="progress">
+                                    <div class="progress-bar"></div>
+                                </div>
+                                <p class="progress-text">Compressing your file...</p>
+                            </div>
+
+                            <div id="errorMessage" class="error-message" hidden>
+                                <p class="error-title">Error</p>
+                                <p class="error-text"></p>
+                                <p class="error-tips">
+                                    Tips: Use original quality files, avoid pre-compressed content
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="stats" class="card results-card" hidden>
+                        <div class="card-header">
+                            <h2 class="card-title">Compression Results <span id="fileTypeLabel" class="badge"></span></h2>
+                        </div>
+                        <div class="card-content">
+                            <div id="statsContent" class="stats-grid">
+                                <!-- Stats content will be inserted here -->
+                            </div>
+
+                            <div class="preview-container">
+                                <img id="preview" class="file-preview" style="display: none;" />
+                                <iframe id="pdfPreview" class="file-preview" style="display: none;"></iframe>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <button id="downloadBtn" class="btn btn-primary btn-full">Download Compressed File</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sidebar">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title">How It Works</h2>
+                        </div>
+                        <div class="card-content">
+                            <div class="step">
+                                <div class="step-number">1</div>
+                                <div class="step-content">
+                                    <h3 class="step-title">Upload Your File</h3>
+                                    <p class="step-description">
+                                        Select or drag & drop an image or PDF file
+                                    </p>
+                                </div>
+                            </div>
+                            
+                            <div class="step">
+                                <div class="step-number">2</div>
+                                <div class="step-content">
+                                    <h3 class="step-title">Compression Happens</h3>
+                                    <p class="step-description">
+                                        Advanced algorithms reduce file size while preserving quality
+                                    </p>
+                                </div>
+                            </div>
+                            
+                            <div class="step">
+                                <div class="step-number">3</div>
+                                <div class="step-content">
+                                    <h3 class="step-title">Download Result</h3>
+                                    <p class="step-description">
+                                        Get your compressed file instantly
+                                    </p>
+                                </div>
+                            </div>
+                            
+                            <div class="separator"></div>
+                            
+                            <div class="features">
+                                <h3 class="features-title">Features</h3>
+                                <ul class="features-list">
+                                    <li class="feature-item">
+                                        <span class="check-icon">✓</span>
+                                        100% browser-based compression
+                                    </li>
+                                    <li class="feature-item">
+                                        <span class="check-icon">✓</span>
+                                        Your files never leave your device
+                                    </li>
+                                    <li class="feature-item">
+                                        <span class="check-icon">✓</span>
+                                        Fast processing - no waiting
+                                    </li>
+                                    <li class="feature-item">
+                                        <span class="check-icon">✓</span>
+                                        Supports multiple file formats
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title">FAQ</h2>
+                        </div>
+                        <div class="card-content">
+                            <div class="faq-item">
+                                <h3 class="faq-question">Is it really free?</h3>
+                                <p class="faq-answer">
+                                    Yes, SlimFile is completely free with no limitations.
+                                </p>
+                            </div>
+                            
+                            <div class="faq-item">
+                                <h3 class="faq-question">Is my data secure?</h3>
+                                <p class="faq-answer">
+                                    All compression happens in your browser. Files are never uploaded to any server.
+                                </p>
+                            </div>
+                            
+                            <div class="faq-item">
+                                <h3 class="faq-question">What's the quality like?</h3>
+                                <p class="faq-answer">
+                                    We use smart algorithms to balance size reduction and visual quality.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <p>© <span id="currentYear"></span> SlimFile Inc. All rights reserved.</p>
+            <p>Secure browser-based file compression</p>
+        </footer>
+    </div>
+    <script src="compression.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
