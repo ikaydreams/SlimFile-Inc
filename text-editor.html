@@ -1,0 +1,909 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SlimFile Text Editor</title>
+  <link rel="icon" href="circle.png" type="image/png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Inter:wght@400;500;700&family=Merriweather:wght@400;700&family=Lato:wght@400;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* Reset and Base Styles */
+    :root {
+      --primary: #9f7aea;
+      --primary-dark: #ea3e83;
+      --primary-light: rgba(156, 39, 176, 0.1);
+      --secondary: #ea3e83;
+      --secondary-dark: #ea3e83;
+      --text-dark: black;
+      --text-light: #ffffff;
+      --text-muted: #ffffff;
+      --border-color: #e5e7eb;
+      --bg-light: #1a202c;
+      --bg-white: white;
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      --radius-md: 0.375rem;
+      --radius-lg: 0.5rem;
+      --font-sans: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    }
+
+
+    
+
+
+
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      font-size: 16px;
+      line-height: 1.5;
+      color: var(--text-dark);
+      background-color: #1a202c;
+    }
+
+    /* Editor Container */
+    .editor-container {
+      display: flex;
+      flex-direction: column;
+      max-width: 1200px;
+      min-height: 100vh;
+      margin: 0 auto;
+      background-color: var(--bg-white);
+      box-shadow: var(--shadow-lg);
+    }
+
+    /* Header Styles */
+    .editor-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--border-color);
+      background-color: var(--bg-white);
+    }
+
+    .logo-section {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .logo {
+      font-weight: bold;
+      font-size: 1.25rem;
+      color: var(--primary);
+    }
+
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 0.875rem;
+      display: none;
+    }
+
+    @media (min-width: 640px) {
+      .subtitle {
+        display: block;
+      }
+    }
+
+    .header-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .status-message {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      opacity: 0;
+      transition: opacity 0.3s ease-in-out;
+    }
+
+    .status-message.visible {
+      opacity: 1;
+    }
+
+    .export-buttons {
+      display: flex;
+      gap: 0.5rem;
+      margin-left: 1rem;
+    }
+
+    .btn {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.375rem 0.75rem;
+      border-radius: var(--radius-md);
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: none;
+      outline: none;
+    }
+
+    .btn-text {
+      display: none;
+    }
+
+    @media (min-width: 640px) {
+      .btn-text {
+        display: inline;
+      }
+    }
+
+    .btn-primary {
+      background-color: var(--primary);
+      color: var(--text-light);
+    }
+
+    .btn-primary:hover {
+      background-color: var(--primary-dark);
+    }
+
+    .btn-secondary {
+      background-color: var(--secondary);
+      color: var(--text-light);
+    }
+
+    .btn-secondary:hover {
+      background-color: var(--secondary-dark);
+    }
+
+    .btn-light {
+      background-color: #f3f4f6;
+      color: var(--text-dark);
+    }
+
+    .btn-light:hover {
+      background-color: #e5e7eb;
+    }
+
+    .btn-assistant {
+      background-image: linear-gradient(to right, var(--primary), var(--secondary));
+      color: var(--text-light);
+      transition: all 0.3s ease;
+    }
+
+    .btn-assistant:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-1px);
+    }
+
+    .mobile-menu-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 2rem;
+      height: 2rem;
+      border-radius: var(--radius-md);
+      background-color: transparent;
+      color: black;
+      border: none;
+      cursor: pointer;
+    }
+
+    .mobile-menu-btn:hover {
+      background-color: violet;
+    }
+
+    @media (min-width: 640px) {
+      .mobile-menu-btn {
+        display: none;
+      }
+    }
+
+    /* Toolbar Styles */
+    .editor-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      padding: 0.5rem;
+      border-bottom: 1px solid var(--border-color);
+      background-color: var(--bg-white);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .toolbar-section {
+      display: flex;
+      align-items: center;
+      margin-right: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .toolbar-divider {
+      width: 1px;
+      height: 1.5rem;
+      background-color: var(--border-color);
+      margin: 0 0.5rem;
+    }
+
+    .toolbar-btn {
+      display: flex;
+      align-items: center;
+      padding: 0.5rem;
+      border-radius: var(--radius-md);
+      background-color: transparent;
+      color: var(--text-dark);
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .toolbar-btn:hover {
+      background-color: var(--primary-light);
+      color: var(--primary);
+    }
+
+    .toolbar-btn.active {
+      background-color: var(--primary-light);
+      color: var(--primary);
+    }
+
+    .dropdown {
+      position: relative;
+    }
+
+    .dropdown-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    .dropdown-text {
+      font-size: 0.875rem;
+    }
+
+    .dropdown-panel {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      width: 12rem;
+      background-color: var(--bg-white);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-md);
+      border: 1px solid var(--border-color);
+      z-index: 20;
+      max-height: 16rem;
+      overflow-y: auto;
+      transform-origin: top;
+      transform: scaleY(0);
+      opacity: 0;
+      pointer-events: none;
+      transition: transform 0.1s ease-out, opacity 0.1s ease-out;
+    }
+
+    .dropdown.open .dropdown-panel {
+      transform: scaleY(1);
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .dropdown-item {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      padding: 0.5rem 1rem;
+      text-align: left;
+      font-size: 0.875rem;
+      background-color: transparent;
+      color: var(--text-dark);
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .dropdown-item:hover {
+      background-color: #f3f4f6;
+      color: var(--primary);
+    }
+
+    .color-panel {
+      width: auto;
+      padding: 0.5rem;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 0.5rem;
+    }
+
+    .color-item {
+      width: 1.5rem;
+      height: 1.5rem;
+      border-radius: 9999px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .color-item:hover {
+      box-shadow: 0 0 0 2px var(--primary-light);
+    }
+
+    .color-swatch {
+      width: 0.5rem;
+      height: 0.5rem;
+      border-radius: 9999px;
+      margin-left: 0.25rem;
+    }
+
+    .spacing-value {
+      display: inline-block;
+      width: 1.25rem;
+      margin-right: 0.5rem;
+    }
+
+    /* Editor Content Styles */
+    .editor-content-container {
+      flex: 1;
+      padding: 1.5rem 1rem;
+      overflow-y: auto;
+    }
+
+    .editor-content {
+      width: 100%;
+      max-width: 48rem;
+      min-height: 70vh;
+      margin: 0 auto;
+      padding: 1rem;
+      background-color: var(--bg-white);
+      border-radius: var(--radius-md);
+      outline: none;
+      font-family: 'Roboto', sans-serif;
+      font-size: 1rem;
+      line-height: 1.5;
+      color: var(--text-dark);
+      word-break: break-word;
+    }
+
+    .editor-content:focus {
+      outline: none;
+    }
+
+    .editor-content h1 {
+      font-size: 1.875rem;
+      font-weight: bold;
+      margin-bottom: 1rem;
+    }
+
+    .editor-content h2 {
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin-bottom: 0.75rem;
+    }
+
+    .editor-content p {
+      margin-bottom: 1rem;
+    }
+
+    .editor-content ul,
+    .editor-content ol {
+      margin-bottom: 1rem;
+      padding-left: 2rem;
+    }
+
+    .editor-content table {
+      border-collapse: collapse;
+      width: 100%;
+      margin-bottom: 1rem;
+    }
+
+    .editor-content th,
+    .editor-content td {
+      border: 1px solid #d1d5db;
+      padding: 0.5rem;
+    }
+
+    .editor-content th {
+      background-color: #f3f4f6;
+      font-weight: bold;
+    }
+
+    /* Status Bar */
+    .editor-statusbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.5rem 1rem;
+      border-top: 1px solid var(--border-color);
+      background-color: #1a202c;
+      font-size: 0.875rem;
+      color: var(--text-muted);
+    }
+
+    .save-status {
+      font-size: 0.75rem;
+    }
+
+    /* Dialog Styles */
+    .dialog-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 50;
+    }
+
+    .dialog-box {
+      width: 100%;
+      max-width: 28rem;
+      background-color: var(--bg-white);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg);
+      overflow: hidden;
+    }
+
+    .dialog-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .ai-header {
+      background-image: linear-gradient(to right, var(--primary), var(--secondary));
+      color: var(--text-light);
+    }
+
+    .dialog-header h3 {
+      font-size: 1.125rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .close-btn {
+      background-color: transparent;
+      border: none;
+      color: inherit;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+
+    .dialog-content {
+      padding: 1rem;
+    }
+
+    .dialog-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.5rem;
+      padding: 1rem;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 500;
+      margin-bottom: 0.25rem;
+      color: var(--text-dark);
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 0.5rem 0.75rem;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      font-size: 0.875rem;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+
+    .form-input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px var(--primary-light);
+    }
+
+    .form-row {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .form-row .form-group {
+      flex: 1;
+    }
+
+    /* AI Assistant Styles */
+    .ai-intro {
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+    }
+
+    .ai-suggestions {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .ai-suggestion {
+      display: flex;
+      align-items: flex-start;
+      padding: 0.75rem;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      transition: all 0.2s ease;
+    }
+
+    .ai-suggestion:hover {
+      border-color: var(--primary);
+    }
+
+    .ai-suggestion-text {
+      flex: 1;
+      font-size: 0.875rem;
+    }
+
+    .ai-suggestion-apply {
+      margin-left: 0.5rem;
+      background-color: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .ai-suggestion-apply:hover {
+      color: var(--primary);
+    }
+
+    .ai-loading {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem 0;
+      color: var(--text-muted);
+    }
+
+    .spinner {
+      font-size: 1.5rem;
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Font Classes */
+    .font-roboto { font-family: 'Roboto', sans-serif; }
+    .font-inter { font-family: 'Inter', sans-serif; }
+    .font-times { font-family: 'Times New Roman', serif; }
+    .font-lato { font-family: 'Lato', sans-serif; }
+    .font-merriweather { font-family: 'Merriweather', serif; }
+    .font-opensans { font-family: 'Open Sans', sans-serif; }
+    .font-serif { font-family: serif; }
+    .font-mono { font-family: monospace; }
+
+    /* Utility Classes */
+    .hidden {
+      display: none;
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 640px) {
+      .toolbar-section:not(.toolbar-section-essential) {
+        display: none;
+      }
+      
+      .mobile-menu-open .toolbar-section {
+        display: flex;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Mobile menu overlay -->
+<div id="overlay" class="overlay"></div>
+    
+<!-- Mobile navigation -->
+<div id="mobileNav" class="mobile-nav">
+    <button id="mobileNavClose" class="mobile-nav-close">✕</button>
+    <a href="index.html" class="mobile-nav-link">Home</a>
+    <a href="compressor.html" class="mobile-nav-link">Compress Files</a>
+    <a href="about.html" class="mobile-nav-link">About Us</a>
+    <a href="team.html" class="mobile-nav-link">Our Team</a>
+    <a href="text-editor.html" class="nav-link active">Text Editor</a>
+</div>
+
+<div class="container">
+    <header class="header">
+        <h1 class="logo">SlimFile Text Editor</h1>
+        <p class="tagline">Simplicity for all</p>
+        
+        <!-- Desktop navigation -->
+        <nav class="navigation">
+          <a href="index.html" class="mobile-nav-link">Home</a>
+          <a href="compressor.html" class="mobile-nav-link">Compress Files</a>
+          <a href="about.html" class="nav-link">About Us</a>
+          <a href="team.html" class="nav-link">Our Team</a>
+          <a href="text-editor.html" class="nav-link active">Text Editor</a>
+        </nav>
+        
+        <!-- Hamburger menu button -->
+        <div id="hamburgerMenu" class="hamburger-menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </header>
+
+
+
+  <div class="editor-container">
+    <!-- Header -->
+    <header class="editor-header">
+      <div class="logo-section">
+        <div class="logo">SlimFile</div>
+        <span class="subtitle">Text Editor</span>
+      </div>
+      
+      <div class="header-controls">
+        <div id="status-message" class="status-message"></div>
+        
+        <div class="export-buttons">
+          <button id="ai-assistant-btn" class="btn btn-assistant" title="AI Assistant">
+            <i class="fas fa-magic"></i>
+            <span class="btn-text">AI Assistant</span>
+          </button>
+          <button id="export-pdf-btn" class="btn btn-primary" title="Export as PDF">
+            <i class="fas fa-file-pdf"></i>
+            <span class="btn-text">PDF</span>
+          </button>
+          <button id="export-docx-btn" class="btn btn-secondary" title="Export as DOCX">
+            <i class="fas fa-file-word"></i>
+            <span class="btn-text">DOCX</span>
+          </button>
+        </div>
+        
+        <button id="mobile-menu-btn" class="mobile-menu-btn">
+          <i class="fas fa-ellipsis-v"></i>
+        </button>
+      </div>
+    </header>
+    
+    <!-- Toolbar -->
+    <div id="editor-toolbar" class="editor-toolbar">
+      <!-- Essential formatting -->
+      <div class="toolbar-section toolbar-section-essential">
+        <button class="toolbar-btn" data-command="bold" title="Bold">
+          <i class="fas fa-bold"></i>
+        </button>
+        <button class="toolbar-btn" data-command="italic" title="Italic">
+          <i class="fas fa-italic"></i>
+        </button>
+        <button class="toolbar-btn" data-command="underline" title="Underline">
+          <i class="fas fa-underline"></i>
+        </button>
+        <div class="toolbar-divider"></div>
+      </div>
+      
+      <!-- Text formatting -->
+      <div class="toolbar-section">
+        <!-- Font family dropdown -->
+        <div class="dropdown" data-dropdown="font-family">
+          <button class="toolbar-btn dropdown-btn" title="Font Family">
+            <span class="dropdown-text">Roboto</span>
+            <i class="fas fa-chevron-down"></i>
+          </button>
+          <div class="dropdown-panel">
+            <button class="dropdown-item" data-value="Roboto">Roboto</button>
+            <button class="dropdown-item" data-value="Inter">Inter</button>
+            <button class="dropdown-item" data-value="Times New Roman">Times New Roman</button>
+            <button class="dropdown-item" data-value="Lato">Lato</button>
+            <button class="dropdown-item" data-value="Merriweather">Merriweather</button>
+            <button class="dropdown-item" data-value="Open Sans">Open Sans</button>
+            <button class="dropdown-item" data-value="serif">Serif</button>
+            <button class="dropdown-item" data-value="monospace">Monospace</button>
+          </div>
+        </div>
+        
+        <!-- Font size dropdown -->
+        <div class="dropdown" data-dropdown="font-size">
+          <button class="toolbar-btn dropdown-btn" title="Font Size">
+            <span class="dropdown-text">16</span>
+            <i class="fas fa-chevron-down"></i>
+          </button>
+          <div class="dropdown-panel">
+            <button class="dropdown-item" data-value="12">12</button>
+            <button class="dropdown-item" data-value="14">14</button>
+            <button class="dropdown-item" data-value="16">16</button>
+            <button class="dropdown-item" data-value="18">18</button>
+            <button class="dropdown-item" data-value="24">24</button>
+            <button class="dropdown-item" data-value="36">36</button>
+          </div>
+        </div>
+        
+        <!-- Text color dropdown -->
+        <div class="dropdown" data-dropdown="text-color">
+          <button class="toolbar-btn dropdown-btn" title="Text Color">
+            <i class="fas fa-font"></i>
+            <div class="color-swatch" style="background-color: #212121;"></div>
+          </button>
+          <div class="dropdown-panel color-panel">
+            <button class="color-item" data-value="#212121" style="background-color: #212121;"></button>
+            <button class="color-item" data-value="#ef4444" style="background-color: #ef4444;"></button>
+            <button class="color-item" data-value="#3b82f6" style="background-color: #3b82f6;"></button>
+            <button class="color-item" data-value="#22c55e" style="background-color: #22c55e;"></button>
+            <button class="color-item" data-value="#9C27B0" style="background-color: #9C27B0;"></button>
+            <button class="color-item" data-value="#E91E63" style="background-color: #E91E63;"></button>
+            <button class="color-item" data-value="#eab308" style="background-color: #eab308;"></button>
+            <button class="color-item" data-value="#f97316" style="background-color: #f97316;"></button>
+            <button class="color-item" data-value="#6b7280" style="background-color: #6b7280;"></button>
+            <button class="color-item" data-value="#d1d5db" style="background-color: #d1d5db;"></button>
+          </div>
+        </div>
+        
+        <div class="toolbar-divider"></div>
+      </div>
+      
+      <!-- Paragraph formatting -->
+      <div class="toolbar-section">
+        <button class="toolbar-btn" data-command="justifyLeft" title="Align Left">
+          <i class="fas fa-align-left"></i>
+        </button>
+        <button class="toolbar-btn" data-command="justifyCenter" title="Align Center">
+          <i class="fas fa-align-center"></i>
+        </button>
+        <button class="toolbar-btn" data-command="justifyRight" title="Align Right">
+          <i class="fas fa-align-right"></i>
+        </button>
+        <button class="toolbar-btn" data-command="justifyFull" title="Justify">
+          <i class="fas fa-align-justify"></i>
+        </button>
+        
+        <!-- Line spacing dropdown -->
+        <div class="dropdown" data-dropdown="line-spacing">
+          <button class="toolbar-btn dropdown-btn" title="Line Spacing">
+            <i class="fas fa-text-height"></i>
+            <i class="fas fa-chevron-down"></i>
+          </button>
+          <div class="dropdown-panel">
+            <button class="dropdown-item" data-command="lineHeight" data-value="1">
+              <span class="spacing-value">1</span>Single
+            </button>
+            <button class="dropdown-item" data-command="lineHeight" data-value="1.5">
+              <span class="spacing-value">1.5</span>1.5 lines
+            </button>
+            <button class="dropdown-item" data-command="lineHeight" data-value="2">
+              <span class="spacing-value">2</span>Double
+            </button>
+            <button class="dropdown-item" data-command="lineHeight" data-value="2.5">
+              <span class="spacing-value">2.5</span>2.5 lines
+            </button>
+          </div>
+        </div>
+        
+        <div class="toolbar-divider"></div>
+      </div>
+      
+      <!-- Lists and indentation -->
+      <div class="toolbar-section">
+        <button class="toolbar-btn" data-command="insertUnorderedList" title="Bullet List">
+          <i class="fas fa-list-ul"></i>
+        </button>
+        <button class="toolbar-btn" data-command="insertOrderedList" title="Numbered List">
+          <i class="fas fa-list-ol"></i>
+        </button>
+        <button class="toolbar-btn" data-command="outdent" title="Decrease Indent">
+          <i class="fas fa-outdent"></i>
+        </button>
+        <button class="toolbar-btn" data-command="indent" title="Increase Indent">
+          <i class="fas fa-indent"></i>
+        </button>
+        <div class="toolbar-divider"></div>
+      </div>
+      
+      <!-- Insert options -->
+      <div class="toolbar-section">
+        <button class="toolbar-btn" id="insert-link-btn" title="Insert Link">
+          <i class="fas fa-link"></i>
+        </button>
+        <button class="toolbar-btn" data-command="unlink" title="Remove Link">
+          <i class="fas fa-unlink"></i>
+        </button>
+        <button class="toolbar-btn" id="insert-image-btn" title="Insert Image">
+          <i class="fas fa-image"></i>
+        </button>
+        <button class="toolbar-btn" id="insert-table-btn" title="Insert Table">
+          <i class="fas fa-table"></i>
+        </button>
+      </div>
+    </div>
+    
+    <!-- Editor Content -->
+    <div class="editor-content-container">
+      <div id="editor-content" class="editor-content" contenteditable="true"></div>
+    </div>
+    
+    <!-- Status Bar -->
+    <div class="editor-statusbar">
+      <div id="word-count">0 words</div>
+      <div class="save-status">Auto-saved: <span id="last-saved">Just now</span></div>
+    </div>
+  </div>
+  
+  <!-- Format Dialogs -->
+  <div id="format-dialog" class="dialog-overlay hidden">
+    <div class="dialog-box">
+      <div class="dialog-header">
+        <h3 id="dialog-title">Insert Link</h3>
+        <button id="close-dialog-btn" class="close-btn"><i class="fas fa-times"></i></button>
+      </div>
+      <div id="dialog-content" class="dialog-content">
+        <!-- Dialog content will be dynamically inserted here -->
+      </div>
+      <div class="dialog-footer">
+        <button id="cancel-dialog-btn" class="btn btn-light">Cancel</button>
+        <button id="apply-dialog-btn" class="btn btn-primary">Insert</button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- AI Assistant Dialog -->
+  <div id="ai-assistant-dialog" class="dialog-overlay hidden">
+    <div class="dialog-box">
+      <div class="dialog-header ai-header">
+        <h3><i class="fas fa-magic"></i> AI Writing Assistant</h3>
+        <button id="close-ai-dialog-btn" class="close-btn"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="dialog-content">
+        <p class="ai-intro">AI has analyzed your text and suggests the following improvements:</p>
+        
+        <div id="ai-suggestions" class="ai-suggestions">
+          <div class="ai-loading">
+            <div class="spinner"><i class="fas fa-circle-notch"></i></div>
+            <p>Analyzing your text...</p>
+          </div>
+        </div>
+      </div>
+      <div class="dialog-footer">
+        <button id="close-ai-btn" class="btn btn-light">Close</button>
+      </div>
+    </div>
+  </div>
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script src="https://unpkg.com/docx@8.2.3/build/index.js"></script>
+
+  
+  <script>
+    function _0x4e30(_0x34f353,_0x1d65bf){const _0x48cd92=_0x48cd();return _0x4e30=function(_0x4e30e3,_0x483379){_0x4e30e3=_0x4e30e3-0x1e1;let _0x3149e3=_0x48cd92[_0x4e30e3];return _0x3149e3;},_0x4e30(_0x34f353,_0x1d65bf);}const _0x186ded=_0x4e30;(function(_0x427e56,_0x379a29){const _0x35fc4a=_0x4e30,_0x48925f=_0x427e56();while(!![]){try{const _0x843ca6=-parseInt(_0x35fc4a(0x286))/0x1*(parseInt(_0x35fc4a(0x26f))/0x2)+parseInt(_0x35fc4a(0x235))/0x3*(-parseInt(_0x35fc4a(0x1fa))/0x4)+parseInt(_0x35fc4a(0x269))/0x5+parseInt(_0x35fc4a(0x1f2))/0x6*(-parseInt(_0x35fc4a(0x276))/0x7)+parseInt(_0x35fc4a(0x1e3))/0x8*(-parseInt(_0x35fc4a(0x20d))/0x9)+parseInt(_0x35fc4a(0x248))/0xa+-parseInt(_0x35fc4a(0x20c))/0xb*(-parseInt(_0x35fc4a(0x1f9))/0xc);if(_0x843ca6===_0x379a29)break;else _0x48925f['push'](_0x48925f['shift']());}catch(_0xb5b0e0){_0x48925f['push'](_0x48925f['shift']());}}}(_0x48cd,0xd1030),document[_0x186ded(0x273)](_0x186ded(0x278),function(){const _0x563d5c=_0x186ded,_0x2a77b5=document[_0x563d5c(0x26b)]('editor-content'),_0x3b2353=document[_0x563d5c(0x26b)](_0x563d5c(0x1ed)),_0x15d19d=document[_0x563d5c(0x26b)](_0x563d5c(0x232)),_0xa614df=document[_0x563d5c(0x26b)](_0x563d5c(0x28e)),_0x398f4e=document[_0x563d5c(0x26b)](_0x563d5c(0x1f0)),_0x38bf26=document[_0x563d5c(0x26b)](_0x563d5c(0x267)),_0x53246e=document[_0x563d5c(0x26b)](_0x563d5c(0x202)),_0x41276e=document[_0x563d5c(0x26b)](_0x563d5c(0x204)),_0x48d2a1=document[_0x563d5c(0x26b)](_0x563d5c(0x1eb)),_0x18ef8f=document['getElementById'](_0x563d5c(0x245)),_0x3bf5c1=document[_0x563d5c(0x26b)](_0x563d5c(0x1ea)),_0x4ed5da=document[_0x563d5c(0x26b)]('cancel-dialog-btn'),_0x2d329b=document[_0x563d5c(0x26b)](_0x563d5c(0x23f)),_0x4e6069=document[_0x563d5c(0x26b)](_0x563d5c(0x280)),_0x270578=document['getElementById'](_0x563d5c(0x27f)),_0x5a8db7=document[_0x563d5c(0x26b)](_0x563d5c(0x262)),_0x5888b0=document[_0x563d5c(0x26b)](_0x563d5c(0x265)),_0x3d248d=document[_0x563d5c(0x26b)](_0x563d5c(0x224)),_0x5cd395=document[_0x563d5c(0x26b)](_0x563d5c(0x249)),_0x1c80cf=document[_0x563d5c(0x26b)](_0x563d5c(0x20f)),_0x4f5b9c=document[_0x563d5c(0x26b)](_0x563d5c(0x254)),_0x42fe35=document[_0x563d5c(0x26b)](_0x563d5c(0x222));let _0x35a73b='',_0x3e7f3a,_0x51e127='Roboto',_0x46a6be='16',_0x1c6ff8=_0x563d5c(0x24b);_0x1700a3(),_0x13b573();function _0x1700a3(){const _0x265967=_0x563d5c,_0x1f939a=localStorage[_0x265967(0x23a)]('slimFileEditorContent');_0x1f939a?_0x2a77b5['innerHTML']=_0x1f939a:_0x2a77b5['innerHTML']=_0x265967(0x279),_0x1f7a85(),_0x3e7f3a=setInterval(_0x24d365,0x2710);}function _0x13b573(){const _0x5ef691=_0x563d5c;_0x3b2353[_0x5ef691(0x273)](_0x5ef691(0x26c),function(_0x395344){const _0x43a495=_0x5ef691,_0x2e5f84=_0x395344[_0x43a495(0x216)][_0x43a495(0x1e5)](_0x43a495(0x1e7));if(!_0x2e5f84)return;const _0x10779e=_0x2e5f84['dataset'][_0x43a495(0x261)],_0x108bed=_0x2e5f84[_0x43a495(0x25d)][_0x43a495(0x264)];_0x10779e&&(_0x4c461d(_0x10779e,_0x108bed),_0x395344[_0x43a495(0x270)]());}),_0x2a77b5[_0x5ef691(0x273)](_0x5ef691(0x1e1),function(){const _0x2a9032=_0x5ef691;_0x1f7a85(),_0x294422(_0x2a9032(0x208));}),_0x4ef19b(),_0x5cd395['addEventListener'](_0x5ef691(0x26c),function(){const _0x52523e=_0x5ef691;_0x2384ff(_0x52523e(0x1e4));}),_0x1c80cf[_0x5ef691(0x273)](_0x5ef691(0x26c),function(){const _0x398a90=_0x5ef691;_0x2384ff(_0x398a90(0x24d));}),_0x4f5b9c[_0x5ef691(0x273)](_0x5ef691(0x26c),function(){const _0x36287f=_0x5ef691;_0x2384ff(_0x36287f(0x213));}),_0x2d329b[_0x5ef691(0x273)](_0x5ef691(0x26c),_0x4aaa36),_0x4ed5da[_0x5ef691(0x273)]('click',_0x4aaa36),_0x3bf5c1[_0x5ef691(0x273)](_0x5ef691(0x26c),_0x3a9cd7),_0x42fe35[_0x5ef691(0x273)](_0x5ef691(0x26c),_0x1b77ba),_0x4e6069[_0x5ef691(0x273)](_0x5ef691(0x26c),_0xa115c3),_0x270578[_0x5ef691(0x273)](_0x5ef691(0x26c),_0xa115c3),_0x5888b0[_0x5ef691(0x273)](_0x5ef691(0x26c),_0x285a70),_0x3d248d[_0x5ef691(0x273)]('click',_0x4d6b91),_0x5a8db7['addEventListener'](_0x5ef691(0x26c),_0x1050f8);}function _0x4ef19b(){const _0x50677e=_0x563d5c,_0x54f36e=document[_0x50677e(0x1f1)](_0x50677e(0x1ff));_0x54f36e[_0x50677e(0x25a)](_0x52588f=>{const _0x2caf03=_0x50677e,_0x4924d7=_0x52588f[_0x2caf03(0x212)](_0x2caf03(0x1fd)),_0x1d5fe5=_0x52588f['querySelector'](_0x2caf03(0x27b));_0x4924d7[_0x2caf03(0x273)](_0x2caf03(0x26c),function(_0x36a75e){const _0x575a4d=_0x2caf03;_0x52588f[_0x575a4d(0x24f)][_0x575a4d(0x1fb)]('open'),_0x36a75e['stopPropagation']();}),document[_0x2caf03(0x273)](_0x2caf03(0x26c),function(_0x5b9978){const _0x2cb2f4=_0x2caf03;!_0x52588f['contains'](_0x5b9978['target'])&&_0x52588f[_0x2cb2f4(0x24f)]['remove'](_0x2cb2f4(0x200));}),_0x1d5fe5&&_0x1d5fe5[_0x2caf03(0x273)](_0x2caf03(0x26c),function(_0x1a551b){const _0x54e62a=_0x2caf03,_0x8ceeee=_0x1a551b[_0x54e62a(0x216)][_0x54e62a(0x1e5)](_0x54e62a(0x253));if(!_0x8ceeee)return;const _0x29deae=_0x52588f[_0x54e62a(0x25d)][_0x54e62a(0x260)],_0x3a9592=_0x8ceeee[_0x54e62a(0x25d)][_0x54e62a(0x264)],_0x11abc5=_0x8ceeee[_0x54e62a(0x25d)][_0x54e62a(0x261)];if(_0x29deae==='font-family')_0x39bc42(_0x3a9592);else{if(_0x29deae===_0x54e62a(0x217))_0x38efb1(_0x3a9592);else{if(_0x29deae===_0x54e62a(0x271))_0x3b0b00(_0x3a9592);else _0x11abc5&&_0x4c461d(_0x11abc5,_0x3a9592);}}_0x52588f['classList'][_0x54e62a(0x274)](_0x54e62a(0x200));});});const _0x433f49=document[_0x50677e(0x1f1)]('.color-item');_0x433f49[_0x50677e(0x25a)](_0x67c8b=>{const _0x17f1d9=_0x50677e;_0x67c8b[_0x17f1d9(0x273)](_0x17f1d9(0x26c),function(){const _0x46c628=_0x17f1d9,_0x394638=this['dataset'][_0x46c628(0x264)];_0x3b0b00(_0x394638);});});}function _0x4c461d(_0x2608f6,_0x3d302a){const _0x125c83=_0x563d5c;_0x2608f6===_0x125c83(0x23c)?_0x34673d(_0x3d302a):document[_0x125c83(0x1fc)](_0x2608f6,![],_0x3d302a),_0x2a77b5['focus']();}function _0x39bc42(_0x552a44){const _0x3581ea=_0x563d5c;_0x51e127=_0x552a44,document['execCommand'](_0x3581ea(0x237),![],_0x552a44),_0x3f6db4(_0x3581ea(0x21d),_0x552a44);}function _0x38efb1(_0x165fbe){const _0x7b3b1a=_0x563d5c;_0x46a6be=_0x165fbe;const _0x161138={'12':'1','14':'2','16':'3','18':'4','24':'5','36':'7'};document[_0x7b3b1a(0x1fc)](_0x7b3b1a(0x229),![],_0x161138[_0x165fbe]||'3'),_0x3f6db4(_0x7b3b1a(0x217),_0x165fbe);}function _0x3b0b00(_0x3cd5ee){const _0x45b5fe=_0x563d5c;_0x1c6ff8=_0x3cd5ee,document[_0x45b5fe(0x1fc)](_0x45b5fe(0x1f6),![],_0x3cd5ee);const _0x34518f=document['querySelector']('[data-dropdown=\x22text-color\x22]\x20.color-swatch');_0x34518f&&(_0x34518f[_0x45b5fe(0x230)]['backgroundColor']=_0x3cd5ee);}function _0x34673d(_0x560662){const _0x4a43e0=_0x563d5c,_0x20b054=window[_0x4a43e0(0x1f4)]();if(_0x20b054[_0x4a43e0(0x27e)]===0x0)return;const _0x80c20=_0x20b054[_0x4a43e0(0x244)](0x0);if(!_0x80c20['collapsed']){const _0x561577=_0x80c20[_0x4a43e0(0x231)](),_0x2c3f0a=document['createElement'](_0x4a43e0(0x26e));_0x2c3f0a['style'][_0x4a43e0(0x23c)]=_0x560662||'1',_0x2c3f0a[_0x4a43e0(0x223)](_0x561577),_0x80c20[_0x4a43e0(0x27a)](_0x2c3f0a);}else{let _0x539b6d=_0x80c20['startContainer'];while(_0x539b6d&&_0x539b6d!==_0x2a77b5){if(_0x539b6d[_0x4a43e0(0x288)]===Node[_0x4a43e0(0x1ef)]){const _0x1335a7=_0x539b6d,_0x308852=window[_0x4a43e0(0x226)](_0x1335a7)[_0x4a43e0(0x209)];if(_0x308852===_0x4a43e0(0x239)||_0x308852===_0x4a43e0(0x207)||_0x1335a7[_0x4a43e0(0x20b)]==='P'||_0x1335a7[_0x4a43e0(0x20b)]==='DIV'||_0x1335a7['tagName']==='H1'||_0x1335a7['tagName']==='H2'||_0x1335a7['tagName']==='H3'||_0x1335a7[_0x4a43e0(0x20b)]==='H4'||_0x1335a7['tagName']==='H5'||_0x1335a7[_0x4a43e0(0x20b)]==='H6'||_0x1335a7['tagName']==='LI'){_0x1335a7[_0x4a43e0(0x230)]['lineHeight']=_0x560662||'1';break;}}_0x539b6d=_0x539b6d[_0x4a43e0(0x1e6)];}if(_0x539b6d===_0x2a77b5){document['execCommand']('formatBlock',![],'p');const _0x82361c=_0x80c20['startContainer'][_0x4a43e0(0x1e6)];_0x82361c&&_0x82361c[_0x4a43e0(0x20b)]==='P'&&(_0x82361c[_0x4a43e0(0x230)]['lineHeight']=_0x560662||'1');}}}function _0x2384ff(_0x25c658){const _0x3fe9be=_0x563d5c;_0x35a73b=_0x25c658;if(_0x25c658===_0x3fe9be(0x1e4))_0x48d2a1[_0x3fe9be(0x272)]='Insert\x20Link',_0x18ef8f[_0x3fe9be(0x28c)]=_0x3fe9be(0x25b),_0x3bf5c1[_0x3fe9be(0x272)]='Insert',setTimeout(()=>{const _0x4ac4ef=_0x3fe9be,_0x265af4=document['getElementById'](_0x4ac4ef(0x240));_0x265af4&&(_0x265af4[_0x4ac4ef(0x264)]=_0x284593()||'');},0x0);else{if(_0x25c658===_0x3fe9be(0x24d))_0x48d2a1[_0x3fe9be(0x272)]='Insert\x20Image',_0x18ef8f[_0x3fe9be(0x28c)]=_0x3fe9be(0x252),_0x3bf5c1[_0x3fe9be(0x272)]=_0x3fe9be(0x26d);else _0x25c658===_0x3fe9be(0x213)&&(_0x48d2a1[_0x3fe9be(0x272)]=_0x3fe9be(0x246),_0x18ef8f['innerHTML']=_0x3fe9be(0x21b),_0x3bf5c1[_0x3fe9be(0x272)]=_0x3fe9be(0x26d));}_0x38bf26[_0x3fe9be(0x24f)][_0x3fe9be(0x274)](_0x3fe9be(0x21f));}function _0x4aaa36(){const _0x430705=_0x563d5c;_0x38bf26['classList'][_0x430705(0x1f3)](_0x430705(0x21f)),_0x35a73b='';}function _0x3a9cd7(){const _0x29f076=_0x563d5c;switch(_0x35a73b){case'link':const _0x1e307d=document[_0x29f076(0x26b)](_0x29f076(0x240))?.[_0x29f076(0x264)],_0xd45963=document['getElementById'](_0x29f076(0x257))?.['value'];if(_0xd45963){const _0x274f96=_0x284593();_0x274f96?document[_0x29f076(0x1fc)](_0x29f076(0x22c),![],_0xd45963):_0x4eee40(_0x29f076(0x243)+_0xd45963+'\x22>'+(_0x1e307d||_0xd45963)+'</a>');}break;case _0x29f076(0x24d):const _0x33463e=document[_0x29f076(0x26b)](_0x29f076(0x258))?.[_0x29f076(0x264)],_0x1de283=document[_0x29f076(0x26b)](_0x29f076(0x1f7))?.[_0x29f076(0x264)];_0x33463e&&_0x4eee40(_0x29f076(0x21e)+_0x33463e+'\x22\x20alt=\x22'+(_0x1de283||'')+_0x29f076(0x225));break;case _0x29f076(0x213):const _0x2ac12f=parseInt(document[_0x29f076(0x26b)](_0x29f076(0x26a))?.[_0x29f076(0x264)]||'3',0xa),_0xa5de48=parseInt(document[_0x29f076(0x26b)](_0x29f076(0x1ee))?.[_0x29f076(0x264)]||'3',0xa);_0x2ac12f&&_0xa5de48&&_0xc76d95(_0x2ac12f,_0xa5de48);break;}_0x4aaa36(),_0x2a77b5['focus']();}function _0x1b77ba(){const _0x3bf83f=_0x563d5c;_0x53246e[_0x3bf83f(0x24f)][_0x3bf83f(0x274)](_0x3bf83f(0x21f)),_0x41276e['innerHTML']=_0x3bf83f(0x22e),_0x294422(_0x3bf83f(0x250)),setTimeout(()=>{const _0x1fdfa1=_0x3bf83f,_0x2af0ff=['Improve\x20paragraph\x20flow\x20with\x20better\x20transitions',_0x1fdfa1(0x247),_0x1fdfa1(0x218),_0x1fdfa1(0x277),_0x1fdfa1(0x21a)];_0x41276e[_0x1fdfa1(0x28c)]='',_0x2af0ff[_0x1fdfa1(0x25a)]((_0x276061,_0x4455e5)=>{const _0x5cd32e=_0x1fdfa1,_0x2817c6=document[_0x5cd32e(0x234)](_0x5cd32e(0x282));_0x2817c6['className']='ai-suggestion',_0x2817c6[_0x5cd32e(0x28c)]=_0x5cd32e(0x1f8)+_0x276061+'</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<button\x20class=\x22ai-suggestion-apply\x22\x20data-index=\x22'+_0x4455e5+_0x5cd32e(0x256),_0x41276e[_0x5cd32e(0x223)](_0x2817c6);});const _0x12d82b=document[_0x1fdfa1(0x1f1)](_0x1fdfa1(0x255));_0x12d82b[_0x1fdfa1(0x25a)](_0x13209d=>{const _0x55fc6c=_0x1fdfa1;_0x13209d[_0x55fc6c(0x273)]('click',function(){const _0x2129a2=_0x55fc6c,_0x527e1c=parseInt(this[_0x2129a2(0x25d)]['index'],0xa);_0x1f7e04(_0x527e1c);});}),_0x294422('AI\x20suggestions\x20ready!');},0x5dc);}function _0xa115c3(){const _0x1b0e59=_0x563d5c;_0x53246e[_0x1b0e59(0x24f)][_0x1b0e59(0x1f3)]('hidden');}function _0x1f7e04(_0x13dc4c){const _0x150599=_0x563d5c,_0x3ca4a1=window[_0x150599(0x1f4)]();if(_0x3ca4a1[_0x150599(0x27e)]===0x0){_0x294422(_0x150599(0x241));return;}const _0x7672e9=_0x3ca4a1[_0x150599(0x244)](0x0);if(_0x7672e9[_0x150599(0x221)]){_0x294422(_0x150599(0x241));return;}const _0x1d2ec6=_0x7672e9[_0x150599(0x231)](),_0x3ae010=document[_0x150599(0x234)]('span');_0x3ae010[_0x150599(0x230)][_0x150599(0x227)]=_0x150599(0x214),_0x3ae010[_0x150599(0x230)][_0x150599(0x285)]=_0x150599(0x201),_0x3ae010['appendChild'](_0x1d2ec6),_0x7672e9[_0x150599(0x27a)](_0x3ae010),_0x294422(_0x150599(0x284)),_0xa115c3();}function _0x284593(){const _0x112741=_0x563d5c,_0x49b23b=window[_0x112741(0x1f4)]();if(_0x49b23b[_0x112741(0x27e)]===0x0)return'';return _0x49b23b[_0x112741(0x206)]();}function _0x4eee40(_0x439738){const _0x4565b1=_0x563d5c;document[_0x4565b1(0x1fc)]('insertHTML',![],_0x439738);}function _0xc76d95(_0x49b8f0,_0x1ca9cf){const _0x373a27=_0x563d5c,_0x31812f=document[_0x373a27(0x234)]('table');_0x31812f['className']=_0x373a27(0x1ec),_0x31812f['style'][_0x373a27(0x281)]='collapse',_0x31812f[_0x373a27(0x230)]['width']=_0x373a27(0x1e8),_0x31812f[_0x373a27(0x230)][_0x373a27(0x266)]=_0x373a27(0x220);const _0x6afa88=document[_0x373a27(0x234)](_0x373a27(0x28b)),_0x1b8cd3=document[_0x373a27(0x234)]('tr');_0x1b8cd3[_0x373a27(0x230)]['backgroundColor']=_0x373a27(0x238);for(let _0x2a0433=0x0;_0x2a0433<_0x1ca9cf;_0x2a0433++){const _0x1e1d5e=document[_0x373a27(0x234)]('th');_0x1e1d5e[_0x373a27(0x230)][_0x373a27(0x211)]=_0x373a27(0x268),_0x1e1d5e['style'][_0x373a27(0x210)]='0.5rem',_0x1e1d5e[_0x373a27(0x230)][_0x373a27(0x25e)]=_0x373a27(0x1f5),_0x1e1d5e[_0x373a27(0x28c)]=_0x373a27(0x28d)+(_0x2a0433+0x1),_0x1b8cd3['appendChild'](_0x1e1d5e);}_0x6afa88[_0x373a27(0x223)](_0x1b8cd3),_0x31812f[_0x373a27(0x223)](_0x6afa88);const _0x1fb67=document[_0x373a27(0x234)]('tbody');for(let _0x3d1732=0x0;_0x3d1732<_0x49b8f0-0x1;_0x3d1732++){const _0x43a9ed=document[_0x373a27(0x234)]('tr');for(let _0x41bd98=0x0;_0x41bd98<_0x1ca9cf;_0x41bd98++){const _0x38bf70=document[_0x373a27(0x234)]('td');_0x38bf70[_0x373a27(0x230)]['border']=_0x373a27(0x268),_0x38bf70[_0x373a27(0x230)][_0x373a27(0x210)]=_0x373a27(0x1e9),_0x38bf70['innerHTML']='&nbsp;',_0x43a9ed[_0x373a27(0x223)](_0x38bf70);}_0x1fb67[_0x373a27(0x223)](_0x43a9ed);}_0x31812f[_0x373a27(0x223)](_0x1fb67);const _0x2ed316=window[_0x373a27(0x1f4)]();if(_0x2ed316[_0x373a27(0x27e)]){const _0x121e94=_0x2ed316[_0x373a27(0x244)](0x0);_0x121e94[_0x373a27(0x242)](),_0x121e94[_0x373a27(0x27a)](_0x31812f),_0x121e94[_0x373a27(0x233)](_0x31812f),_0x121e94[_0x373a27(0x219)](!![]),_0x2ed316[_0x373a27(0x287)](),_0x2ed316['addRange'](_0x121e94);}else _0x2a77b5[_0x373a27(0x223)](_0x31812f);}function _0x3f6db4(_0x330774,_0x4d7792){const _0x1aa3aa=_0x563d5c,_0x131dee=document[_0x1aa3aa(0x212)](_0x1aa3aa(0x263)+_0x330774+_0x1aa3aa(0x289));_0x131dee&&(_0x131dee[_0x1aa3aa(0x272)]=_0x4d7792);}function _0x1f7a85(){const _0x4ab6b8=_0x563d5c,_0x308e2c=_0x2a77b5[_0x4ab6b8(0x23d)]||'',_0x915297=_0x308e2c[_0x4ab6b8(0x24a)]()['split'](/\s+/),_0x5a7077=_0x308e2c[_0x4ab6b8(0x24a)]()===''?0x0:_0x915297[_0x4ab6b8(0x1e2)];_0xa614df[_0x4ab6b8(0x272)]=_0x5a7077+'\x20'+(_0x5a7077===0x1?'word':'words');}function _0x24d365(){const _0x4eb605=_0x563d5c,_0x233a01=_0x2a77b5[_0x4eb605(0x28c)];localStorage['setItem'](_0x4eb605(0x25c),_0x233a01);const _0xeec1ed=new Date();_0x398f4e[_0x4eb605(0x272)]=_0x163f0f(_0xeec1ed),_0x294422(_0x4eb605(0x22b));}function _0x294422(_0x380566){const _0x56f4db=_0x563d5c;_0x15d19d[_0x56f4db(0x272)]=_0x380566,_0x15d19d[_0x56f4db(0x24f)][_0x56f4db(0x1f3)]('visible'),setTimeout(()=>{const _0x43e8f=_0x56f4db;_0x15d19d[_0x43e8f(0x24f)]['remove'](_0x43e8f(0x27c));},0x7d0);}function _0x163f0f(_0x780cee){const _0x290216=_0x563d5c,_0x598f7a=_0x780cee['getHours']()['toString']()[_0x290216(0x24c)](0x2,'0'),_0x23eaa5=_0x780cee[_0x290216(0x23b)]()[_0x290216(0x206)]()['padStart'](0x2,'0');return _0x598f7a+':'+_0x23eaa5;}function _0x1050f8(){const _0xbb6753=_0x563d5c;document['body'][_0xbb6753(0x24f)][_0xbb6753(0x1fb)](_0xbb6753(0x205));}async function _0x285a70(){const _0x54e24a=_0x563d5c;_0x294422(_0x54e24a(0x1fe));try{const _0x3f78f8=_0x2a77b5['innerHTML'],_0x4fbd5c=document[_0x54e24a(0x234)]('div');_0x4fbd5c['innerHTML']=_0x3f78f8,_0x4fbd5c[_0x54e24a(0x230)][_0x54e24a(0x210)]=_0x54e24a(0x25f);const _0x5d20ac={'margin':[0xa,0xa,0xa,0xa],'filename':_0x54e24a(0x275),'image':{'type':'jpeg','quality':0.98},'html2canvas':{'scale':0x2},'jsPDF':{'unit':'mm','format':'a4','orientation':_0x54e24a(0x236)}};await html2pdf()['from'](_0x4fbd5c)[_0x54e24a(0x22f)](_0x5d20ac)[_0x54e24a(0x20e)](),_0x294422(_0x54e24a(0x203));}catch(_0x29e4aa){console['error'](_0x54e24a(0x215),_0x29e4aa),_0x294422(_0x54e24a(0x228));}}async function _0x4d6b91(){const _0x53eadc=_0x563d5c;_0x294422('Preparing\x20DOCX...');try{const _0x28197a=_0x2a77b5[_0x53eadc(0x28c)],_0x2816c8=_0x1debfe(_0x28197a),_0x1ba6f5=new docx[(_0x53eadc(0x21c))]({'sections':[{'properties':{},'children':[new docx[(_0x53eadc(0x251))]({'children':[new docx[(_0x53eadc(0x24e))](_0x2816c8)]})]}]}),_0x240a3a=await docx[_0x53eadc(0x27d)][_0x53eadc(0x23e)](_0x1ba6f5),_0x4561df=URL[_0x53eadc(0x22d)](_0x240a3a),_0x45e1ff=document[_0x53eadc(0x234)]('a');_0x45e1ff[_0x53eadc(0x28a)]=_0x4561df,_0x45e1ff['download']=_0x53eadc(0x22a),_0x45e1ff[_0x53eadc(0x26c)](),_0x294422(_0x53eadc(0x283));}catch(_0x45ef0d){console[_0x53eadc(0x259)](_0x53eadc(0x20a),_0x45ef0d),_0x294422('Error\x20exporting\x20to\x20DOCX');}}function _0x1debfe(_0x4a42be){const _0x2b7b99=_0x563d5c,_0x343e17=document[_0x2b7b99(0x234)](_0x2b7b99(0x282));return _0x343e17[_0x2b7b99(0x28c)]=_0x4a42be,_0x343e17[_0x2b7b99(0x272)]||_0x343e17['innerText']||'';}}));function _0x48cd(){const _0x39e6bd=['ai-assistant-btn','appendChild','export-docx-btn','\x22\x20style=\x22max-width:\x20100%\x22>','getComputedStyle','backgroundColor','Error\x20exporting\x20to\x20PDF','fontSize','slimFile_document.docx','All\x20changes\x20saved','createLink','createObjectURL','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22ai-loading\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22spinner\x22><i\x20class=\x22fas\x20fa-circle-notch\x22></i></div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<p>Analyzing\x20your\x20text...</p>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20','set','style','extractContents','status-message','setStartAfter','createElement','12bXdpaO','portrait','fontName','#f3f4f6','block','getItem','getMinutes','lineHeight','innerText','toBlob','close-dialog-btn','link-text','Please\x20select\x20text\x20to\x20apply\x20suggestion','deleteContents','<a\x20href=\x22','getRangeAt','dialog-content','Insert\x20Table','Use\x20more\x20descriptive\x20language\x20in\x20the\x20introduction','7927310qdCQJj','insert-link-btn','trim','#212121','padStart','image','TextRun','classList','AI\x20analyzing\x20your\x20text...','Paragraph','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22form-group\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<label\x20for=\x22image-url\x22>Image\x20URL</label>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<input\x20type=\x22text\x22\x20id=\x22image-url\x22\x20class=\x22form-input\x22\x20placeholder=\x22https://example.com/image.jpg\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22form-group\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<label\x20for=\x22image-alt\x22>Alt\x20Text</label>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<input\x20type=\x22text\x22\x20id=\x22image-alt\x22\x20class=\x22form-input\x22\x20placeholder=\x22Image\x20description\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20','.dropdown-item','insert-table-btn','.ai-suggestion-apply','\x22\x20title=\x22Apply\x20suggestion\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<i\x20class=\x22fas\x20fa-magic\x22></i>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</button>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20','link-url','image-url','error','forEach','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22form-group\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<label\x20for=\x22link-text\x22>Text</label>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<input\x20type=\x22text\x22\x20id=\x22link-text\x22\x20class=\x22form-input\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22form-group\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<label\x20for=\x22link-url\x22>URL</label>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<input\x20type=\x22text\x22\x20id=\x22link-url\x22\x20class=\x22form-input\x22\x20placeholder=\x22https://example.com\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20','slimFileEditorContent','dataset','fontWeight','20px','dropdown','command','mobile-menu-btn','[data-dropdown=\x22','value','export-pdf-btn','marginBottom','format-dialog','1px\x20solid\x20#d1d5db','4071755FcToIe','table-rows','getElementById','click','Insert','span','1527278KBkStR','preventDefault','text-color','textContent','addEventListener','remove','slimFile_document.pdf','1035181BVBaTD','Rephrase\x20passive\x20sentences\x20for\x20more\x20active\x20voice','DOMContentLoaded','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<h1>Welcome\x20to\x20slimFile\x20Text\x20Editor</h1>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<p>This\x20is\x20a\x20powerful\x20text\x20editor\x20similar\x20to\x20Microsoft\x20Word,\x20designed\x20for\x20your\x20web\x20application\x20needs.\x20You\x20can\x20format\x20text,\x20create\x20lists,\x20add\x20links\x20and\x20much\x20more.</p>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<h2>Key\x20Features:</h2>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<ul>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<li>Rich\x20text\x20formatting\x20with\x20intuitive\x20controls</li>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<li>Export\x20your\x20documents\x20as\x20PDF\x20or\x20DOCX</li>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<li>Responsive\x20design\x20that\x20works\x20on\x20all\x20devices</li>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<li>Clean,\x20modern\x20interface\x20with\x20beautiful\x20styling</li>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</ul>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<p>Try\x20formatting\x20this\x20text\x20using\x20the\x20toolbar\x20above\x20or\x20simply\x20start\x20typing\x20to\x20create\x20your\x20own\x20content.</p>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20','insertNode','.dropdown-panel','visible','Packer','rangeCount','close-ai-btn','close-ai-dialog-btn','borderCollapse','div','DOCX\x20downloaded\x20successfully','Applied\x20AI\x20suggestion!','color','1ocyHWM','removeAllRanges','nodeType','\x22]\x20.dropdown-text','href','thead','innerHTML','Header\x20','word-count','input','length','3052232Gssyxj','link','closest','parentNode','.toolbar-btn','100%','0.5rem','apply-dialog-btn','dialog-title','border-collapse\x20w-full\x20mb-4','editor-toolbar','table-cols','ELEMENT_NODE','last-saved','querySelectorAll','66DjvkNj','add','getSelection','bold','foreColor','image-alt','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22ai-suggestion-text\x22>','5988JPBegN','716104iHExxC','toggle','execCommand','.dropdown-btn','Preparing\x20PDF...','.dropdown','open','#E91E63','ai-assistant-dialog','PDF\x20downloaded\x20successfully','ai-suggestions','mobile-menu-open','toString','flex','Editing...','display','Error\x20exporting\x20to\x20DOCX:','tagName','60335GmllAr','9onMakB','save','insert-image-btn','padding','border','querySelector','table','rgba(233,\x2030,\x2099,\x200.1)','Error\x20exporting\x20to\x20PDF:','target','font-size','Consider\x20adding\x20supporting\x20evidence\x20to\x20strengthen\x20arguments','collapse','Add\x20a\x20conclusion\x20that\x20summarizes\x20key\x20points','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22form-row\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22form-group\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<label\x20for=\x22table-rows\x22>Rows</label>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<input\x20type=\x22number\x22\x20id=\x22table-rows\x22\x20class=\x22form-input\x22\x20value=\x223\x22\x20min=\x221\x22\x20max=\x2210\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22form-group\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<label\x20for=\x22table-cols\x22>Columns</label>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<input\x20type=\x22number\x22\x20id=\x22table-cols\x22\x20class=\x22form-input\x22\x20value=\x223\x22\x20min=\x221\x22\x20max=\x2210\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20','Document','font-family','<img\x20src=\x22','hidden','1rem','collapsed'];_0x48cd=function(){return _0x39e6bd;};return _0x48cd();}
+
+  </script>
+    
+  <footer class="footer">
+    <p>© <span id="currentYear"></span> SlimFile Inc. All rights reserved.</p>
+    <p>Secure browser-based file compression</p>
+</footer>
+<script src="app.js"></script>
+</body>
+</html>
