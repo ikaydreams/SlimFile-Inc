@@ -574,6 +574,7 @@ header {
 
 .footer-logo p {
     opacity: 0.8;
+    align-items: center;
 }
 
 .footer-links, .footer-contact {
