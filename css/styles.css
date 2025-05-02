@@ -600,28 +600,32 @@ header {
 
 .footer-links ul li {
     margin-bottom: 0.8rem;
+    text-align: left;
 }
 
 .footer-links ul li a {
     opacity: 0.8;
     transition: var(--transition);
+     text-align: left;
 }
 
 .footer-links ul li a:hover {
     opacity: 1;
     color: var(--gradient-end);
+     text-align: left;
 }
 
 .footer-contact p {
     margin-bottom: 1rem;
     display: flex;
-    align-items: center;
+    align-items: left;
     opacity: 0.8;
 }
 
 .footer-contact p i {
     margin-right: 10px;
     color: var(--gradient-mid);
+    text-align: left;
 }
 
 .social-icons {
@@ -647,7 +651,7 @@ header {
 }
 
 .footer-bottom {
-    text-align: center;
+    text-align: left;
     padding-top: 2rem;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
@@ -656,6 +660,7 @@ header {
     margin-bottom: 0;
     font-size: 0.9rem;
     opacity: 0.6;
+    text-align: left;
 }
 
 /* ===== Scroll to Top Button ===== */
