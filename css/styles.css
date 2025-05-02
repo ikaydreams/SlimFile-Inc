@@ -545,8 +545,8 @@ header {
 
 /* ===== Footer ===== */
 .footer {
-    background-color: var(--black);
-    color: #1a202c;
+    background-color: #1a202c;
+    color: white;
     padding: 5rem 5% 2rem;
 }
 
