@@ -75,8 +75,7 @@ function enhanceCartoonAnimations() {
 }
 
 // Create a more cartoon-style animated background effect for the hero section
-function createParticleEffect() {
-    const heroSection = document.querySelector('.hero');
+
     
     // Add floating cartoon bubbles
     for (let i = 0; i < 5; i++) {
