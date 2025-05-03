@@ -3,3 +3,7 @@ Disallow: /private/
 Allow: /
 
 Sitemap: https://www.slim-file.com/sitemap.xml
+
+# Optional: Crawl-delay (polite request to bots)
+# Uncomment if your server is slow or under load
+# Crawl-delay: 10
