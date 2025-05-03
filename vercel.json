@@ -1,0 +1,9 @@
+{
+  "redirects": [
+    {
+      "source": "/(.*)",
+      "destination": "https://www.slim-file.com/$1",
+      "permanent": true
+    }
+  ]
+}
